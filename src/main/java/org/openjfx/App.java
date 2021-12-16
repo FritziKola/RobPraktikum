@@ -1,6 +1,7 @@
 package org.openjfx;
 
 import org.openjfx.eventHandler.ButtonHandler;
+import org.openjfx.eventHandler.KeyHandler;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.FlowPane;
@@ -47,6 +49,8 @@ public class App extends Application {
         
         initRobotInput();
         
+        initTrackingInput();
+        
         stage.show();
     }
    
@@ -54,6 +58,9 @@ public class App extends Application {
     	StackPane root = (StackPane) scene.getRoot();
     	Label eingabe = new Label("Eingabe:");
 		TextField befehl = new TextField();
+		befehl.setId("rBefehl");
+		befehl.addEventHandler(KeyEvent.KEY_PRESSED, new KeyHandler(this));
+		
 		Button backToMmButton = new Button("Back to Menu");
 		backToMmButton.setId("backToMenu");
 		backToMmButton.addEventFilter(ActionEvent.ACTION, bh);
@@ -68,12 +75,12 @@ public class App extends Application {
 		grid.getRowConstraints().add(smally);
 		
 		Text ausgabetext = new Text();
-		ausgabetext.setId("ausgabe");
+		ausgabetext.setId("rAusgabe");
 		ScrollPane ausgabe = new ScrollPane(ausgabetext);
 		ausgabe.setId("ausgabePan");
 		
 		grid.add(ausgabe, 0 ,0);
-		grid.setId("eingabeBox");
+		grid.setId("rEingabeBox");
 		grid.add(hb, 0, 1);
 		//grid.setSpacing(10);
 		hb.getChildren().add(eingabe);
@@ -84,6 +91,44 @@ public class App extends Application {
 		grid.setVisible(false);
 		root.getChildren().add(grid);
 	}
+    
+    private void initTrackingInput() {
+     	StackPane root = (StackPane) scene.getRoot();
+    	Label eingabe = new Label("Eingabe:");
+		TextField befehl = new TextField();
+		befehl.setId("tBefehl");
+		befehl.addEventHandler(KeyEvent.KEY_PRESSED, new KeyHandler(this));
+		Button backToMmButton = new Button("Back to Menu");
+		backToMmButton.setId("backToMenu");
+		backToMmButton.addEventFilter(ActionEvent.ACTION, bh);
+		HBox hb = new HBox();
+		GridPane grid = new GridPane();
+		RowConstraints biggy = new RowConstraints();
+		biggy.setPercentHeight(89);
+		grid.getRowConstraints().add(biggy);
+		
+		RowConstraints smally = new RowConstraints();
+		smally.setPercentHeight(11);
+		grid.getRowConstraints().add(smally);
+		
+		Text ausgabetext = new Text();
+		ausgabetext.setId("tAusgabe");
+		ScrollPane ausgabe = new ScrollPane(ausgabetext);
+		ausgabe.setId("ausgabePan");
+		
+		grid.add(ausgabe, 0 ,0);
+		grid.setId("tEingabeBox");
+		grid.add(hb, 0, 1);
+		//grid.setSpacing(10);
+		hb.getChildren().add(eingabe);
+		hb.getChildren().add(befehl);
+		hb.getChildren().add(backToMmButton);
+		
+		befehl.setPrefSize(500, 50);
+		grid.setVisible(false);
+		root.getChildren().add(grid);
+	}
+    
 
 	private void initMainMenu() {
     	StackPane root = (StackPane) scene.getRoot();
@@ -104,10 +149,12 @@ public class App extends Application {
         Button tServerButton = new Button("TrackingServer verbinden");
         tServerButton.setId("tServerConnect");
         mainMenuButtons.getChildren().add(tServerButton);
-        Button befehlseingabe = new Button("Befehlseingabe"); 
-        befehlseingabe.setId("befehlseingabe");
-        mainMenuButtons.getChildren().add(befehlseingabe);
-        
+        Button rbefehlseingabe = new Button("RobServer Befehlseingabe"); 
+        rbefehlseingabe.setId("rbefehlseingabe");
+        mainMenuButtons.getChildren().add(rbefehlseingabe);
+        Button tbefehlseingabe = new Button("TrackingServer Befehlseingabe"); 
+        tbefehlseingabe.setId("tbefehlseingabe");
+        mainMenuButtons.getChildren().add(tbefehlseingabe);
         Button exitButton = new Button("Exit");
         exitButton.setId("exit");
         mainMenuButtons.getChildren().add(exitButton);
@@ -147,14 +194,6 @@ public class App extends Application {
 	
 	public Scene getScene() {
 		return scene;
-	}
-	
-	public void setClient(Client client) {
-		this.client = client;
-	}
-
-	public Client getClient() {
-		return client;
 	}
 
 

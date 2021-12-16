@@ -8,10 +8,6 @@ import org.openjfx.Tracking;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 
 public class ButtonHandler implements EventHandler<ActionEvent> {
 
@@ -30,17 +26,20 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				System.exit(0);
 			case "rServerConnect":
 				app.setRobot(new Robot(new Client(5005, app)));
+			case "rbefehlseingabe":
+				app.getScene().lookup("#mmButtons").setVisible(false);
+				app.getScene().lookup("#rEingabeBox").setVisible(true);
 				break;
 			case "tServerConnect":
 				app.setTracking(new Tracking(new Client(5000, app)));
-				break;
-			case "befehlseingabe":
+			case "tbefehlseingabe":
 				app.getScene().lookup("#mmButtons").setVisible(false);
-				app.getScene().lookup("#eingabeBox").setVisible(true);
+				app.getScene().lookup("#tEingabeBox").setVisible(true);
 				break;
 			case "backToMenu":
 				app.getScene().lookup("#mmButtons").setVisible(true);
-				app.getScene().lookup("#eingabeBox").setVisible(false);
+				app.getScene().lookup("#rEingabeBox").setVisible(false);
+				app.getScene().lookup("#tEingabeBox").setVisible(false);
 		}
 	}
 

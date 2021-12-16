@@ -17,6 +17,7 @@ public class Client {
     private BufferedReader reader;
     private PrintWriter writer;
     private App app;
+	private int port;
 
     /**
      * This constructor for a simple client only in a local network
@@ -24,6 +25,7 @@ public class Client {
      * @param port The port to connect with
      */
     public Client(int port, App app) {
+    	this.port = port;
     	this.app = app;
         try {
             socket = new Socket("localhost",port);
@@ -45,9 +47,9 @@ public class Client {
 
         System.out.println("Sending: "+ message);
         writer.println(message);
-        Text sended = (Text) app.getScene().lookup("#ausgabe");
+        Text sended = port == 5005 ? (Text) app.getScene().lookup("#rAusgabe") : (Text) app.getScene().lookup("#tAusgabe");
         sended.setText(sended.getText() + "\n" + message);
-        sended.setFill(Color.PEACHPUFF);
+        sended.setFill(Color.MEDIUMPURPLE);
         received();
     }
 
@@ -59,9 +61,9 @@ public class Client {
         String answer = null;
         try {
             answer = reader.readLine();
-            Text receive = (Text) app.getScene().lookup("#ausgabe");
+            Text receive = port == 5005 ? (Text) app.getScene().lookup("#rAusgabe") : (Text) app.getScene().lookup("#tAusgabe");
             receive.setText(receive.getText() + "\n" + answer);
-            receive.setFill(Color.RED);
+            receive.setFill(Color.DARKSLATEGREY);
         } catch(Exception e){
             System.out.println("received methode didn't work.");
         }
