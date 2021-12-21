@@ -38,7 +38,7 @@ public class App extends Application {
 	
     @Override
     public void start(Stage stage) {
-        scene = new Scene(new StackPane(), 640, 480);
+        scene = new Scene(new StackPane(),717, 600);
         stage.setResizable(false);
         stage.setScene(scene);
         
@@ -64,6 +64,9 @@ public class App extends Application {
 		Button backToMmButton = new Button("Back to Menu");
 		backToMmButton.setId("backToMenu");
 		backToMmButton.addEventFilter(ActionEvent.ACTION, bh);
+		Button endPos = new Button("EndPosition");
+		endPos.setId("endPos");
+		endPos.addEventFilter(ActionEvent.ACTION, bh);
 		HBox hb = new HBox();
 		GridPane grid = new GridPane();
 		RowConstraints biggy = new RowConstraints();
@@ -86,6 +89,7 @@ public class App extends Application {
 		hb.getChildren().add(eingabe);
 		hb.getChildren().add(befehl);
 		hb.getChildren().add(backToMmButton);
+		hb.getChildren().add(endPos);
 		
 		befehl.setPrefSize(500, 50);
 		grid.setVisible(false);

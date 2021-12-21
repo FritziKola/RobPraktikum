@@ -29,5 +29,7 @@ public class Robot {
     public void disconnect(){
         client.send("Quit");
     }
-
+    public void endPos() { 
+    	client.send("MovePTPJoints 0 -150 150 0 0 0"); 
+    }
 }
