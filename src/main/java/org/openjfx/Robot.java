@@ -6,7 +6,7 @@ public class Robot {
 
     public Robot(Client client){
         this.client = client;
-        client.received();
+        System.out.println("Received: " + client.received());
         connectToRobot();
     }
 

@@ -50,14 +50,19 @@ public class Client {
         Text sended = port == 5005 ? (Text) app.getScene().lookup("#rAusgabe") : (Text) app.getScene().lookup("#tAusgabe");
         sended.setText(sended.getText() + "\n" + message);
         sended.setFill(Color.MEDIUMPURPLE);
-        received();
+     // prints out system answer
+        String answer = received();
+        System.out.println("Received: " + answer);
+        if (message.equals("CM_NEXTVALUE") || message.equals("GetPositionHomRowWise")) {
+            Splicer.returnMatrix(answer);
+        }
     }
 
     /**
      * Wating from an answer from the server
      * @return The answer from the server
      */
-    public void received(){
+    public String received(){
         String answer = null;
         try {
             answer = reader.readLine();
@@ -67,7 +72,7 @@ public class Client {
         } catch(Exception e){
             System.out.println("received methode didn't work.");
         }
-        System.out.println("Received: " + answer);
+        return answer;
     }
 
 

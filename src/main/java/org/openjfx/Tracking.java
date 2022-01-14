@@ -8,6 +8,7 @@ public class Tracking {
 		this.client = client;     
 		connectToTracking();
 		client.send("PolarisActive_1");
+		client.send("FORMAT_MATRIXROWWISE");
     }
     
     public void connectToTracking(){
