@@ -1,6 +1,12 @@
 package org.openjfx;
 
 public class Splicer {
+    /**
+     * Test kommentar
+     *
+     * @param input
+     * @return
+     */
 	 public static float[][] returnMatrix(String input){
          float [][] matrix = new float[4][4];
          String[] rowWise = input.split(" ");
