@@ -52,6 +52,9 @@ public class App extends Application {
         initTrackingInput();
         
         stage.show();
+        
+        // Testdaten Marker (Splicer):
+         Splicer.returnMatrix("1639716756.780680 y 0.05546889 0.04634489 0.99738426 -234.14794922 -0.07443932 0.99633410 -0.04215620 -186.64950562 -0.99568167 -0.07190625 0.05871543 -1985.50878906 0.147736");
     }
    
     private void initRobotInput() {
