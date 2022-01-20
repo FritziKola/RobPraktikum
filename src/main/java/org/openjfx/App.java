@@ -155,6 +155,9 @@ public class App extends Application {
     	Button leererB2 =new Button("Leerer Button 2");
     	leererB2.setId("kalibrierung");
     	kaliButtons.getChildren().add(leererB2);
+    	Button backToMmButton = new Button("Back to Menu");
+		backToMmButton.setId("backToMenu");
+		kaliButtons.getChildren().add(backToMmButton);
         kaliButtons.setMaxHeight(400);
         kaliButtons.setMaxWidth(200);
         root.setPrefWidth(scene.getWidth());

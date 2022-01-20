@@ -41,6 +41,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				app.getScene().lookup("#rEingabeBox").setVisible(false);
 				app.getScene().lookup("#tEingabeBox").setVisible(false);
 				app.getScene().lookup("#kaliButtons").setVisible(false);
+				break;
 		     case "endPos":
 	            app.getRobot().endPos();
 	            break;
