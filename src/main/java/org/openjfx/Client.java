@@ -40,23 +40,30 @@ public class Client {
     }
 
     /**
+     * Sends a message to the robot or tracking server and prints out the answer of the server
+     * @param message The message you want to sent to the server
+     */
+    public void sendAndReceive(String message) {
+        send(message);
+        System.out.println("Received: " + received());
+//        if (message.equals("CM_NEXTVALUE") || message.equals("GetPositionHomRowWise")) {
+//            Splicer.returnMatrix(answer);
+//        }
+    }
+
+    /**
      * Sends a message to the robot or tracking server
      * @param message The message you want to sent to the server
      */
     public void send(String message) {
-
         System.out.println("Sending: "+ message);
         writer.println(message);
         Text sended = port == 5005 ? (Text) app.getScene().lookup("#rAusgabe") : (Text) app.getScene().lookup("#tAusgabe");
         sended.setText(sended.getText() + "\n" + message);
         sended.setFill(Color.MEDIUMPURPLE);
-     // prints out system answer
-        String answer = received();
-        System.out.println("Received: " + answer);
-        if (message.equals("CM_NEXTVALUE") || message.equals("GetPositionHomRowWise")) {
-            Splicer.returnMatrix(answer);
-        }
     }
+
+
 
     /**
      * Wating from an answer from the server

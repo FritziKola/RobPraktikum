@@ -22,9 +22,9 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			
 			if(event.getCode() == KeyCode.ENTER) {
 				if(text.getId().equals("rBefehl"))
-					app.getRobot().send(text.getText());
+					app.getRobot().sendAndReceive(text.getText());
 				else
-					app.getTracking().send(text.getText());
+					app.getTracking().sendAndReceive(text.getText());
 				text.setText("");
 			}
 		}
