@@ -35,6 +35,7 @@ public class App extends Application {
 	private Scene scene;
 	private ButtonHandler bh;
 	public Client client;
+	private Calibration calibration;
 	
     @Override
     public void start(Stage stage) {
@@ -48,6 +49,8 @@ public class App extends Application {
         initMainMenu();
         
         initRobotInput();
+        
+        initHMKalibrierung();
         
         initTrackingInput();
         
@@ -136,6 +139,38 @@ public class App extends Application {
 		root.getChildren().add(grid);
 	}
     
+    private void initHMKalibrierung() {
+    	StackPane root = (StackPane) scene.getRoot();
+    	FlowPane kaliButtons = new FlowPane(Orientation.VERTICAL, 20, 40);
+    	kaliButtons.setId("kaliButtons");
+    	Button moveRobot = new Button("Move Robot");
+    	moveRobot.setId("moveRobot");
+    	kaliButtons.getChildren().add(moveRobot);
+    	Button kalibrierung =new Button("Kalibrierung");
+    	kalibrierung.setId("kalibrierung");
+    	kaliButtons.getChildren().add(kalibrierung);
+    	Button leererB1 = new Button("Leerer Buttons 1");
+    	leererB1.setId("moveRobot");
+    	kaliButtons.getChildren().add(leererB1);
+    	Button leererB2 =new Button("Leerer Button 2");
+    	leererB2.setId("kalibrierung");
+    	kaliButtons.getChildren().add(leererB2);
+        kaliButtons.setMaxHeight(400);
+        kaliButtons.setMaxWidth(200);
+        root.setPrefWidth(scene.getWidth());
+        root.setPrefHeight(scene.getHeight());
+    	root.getChildren().add(kaliButtons);
+        root.setAlignment(Pos.CENTER);
+        kaliButtons.setVisible(false);
+        for(Node node : kaliButtons.getChildren()) {
+        	if(node instanceof Button) {
+        		Button b = (Button) node;
+        		b.setPrefSize(200, 70);
+        		b.addEventHandler(ActionEvent.ACTION, bh);
+        	}
+        }
+    }
+    
 
 	private void initMainMenu() {
     	StackPane root = (StackPane) scene.getRoot();
@@ -162,6 +197,9 @@ public class App extends Application {
         Button tbefehlseingabe = new Button("TrackingServer Befehlseingabe"); 
         tbefehlseingabe.setId("tbefehlseingabe");
         mainMenuButtons.getChildren().add(tbefehlseingabe);
+        Button kaliHM = new Button("Kalibrierung");
+        kaliHM.setId("kaliHM");
+        mainMenuButtons.getChildren().add(kaliHM);
         Button exitButton = new Button("Exit");
         exitButton.setId("exit");
         mainMenuButtons.getChildren().add(exitButton);
@@ -201,6 +239,13 @@ public class App extends Application {
 	
 	public Scene getScene() {
 		return scene;
+	}
+	
+	public void setCalibration(Calibration calibration) {
+		this.calibration = calibration;
+	}
+	public Calibration getCalibration() {
+		return calibration;
 	}
 
 

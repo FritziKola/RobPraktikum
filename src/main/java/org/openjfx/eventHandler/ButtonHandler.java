@@ -40,9 +40,20 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				app.getScene().lookup("#mmButtons").setVisible(true);
 				app.getScene().lookup("#rEingabeBox").setVisible(false);
 				app.getScene().lookup("#tEingabeBox").setVisible(false);
+				app.getScene().lookup("#kaliButtons").setVisible(false);
 		     case "endPos":
 	            app.getRobot().endPos();
 	            break;
+		     case "kaliHM":
+		    	app.getScene().lookup("#mmButtons").setVisible(false);
+				app.getScene().lookup("#kaliButtons").setVisible(true);
+				break;
+		     case "moveRobot":
+		    	 //app.getCalibration().moveRobotPTP();
+		    	 break;
+		     case "kalibrierung":
+		    	 break;
+			
 		}
 	}
 
