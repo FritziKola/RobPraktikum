@@ -23,15 +23,21 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 		
 		switch(button.getId()) {
 			case "exit":
+				if(app.getRobot() != null){app.getRobot().disconnect();}
+				if(app.getTracking() != null){app.getTracking().disconnect();}
 				System.exit(0);
 			case "rServerConnect":
-				app.setRobot(new Robot(new Client(5005, app)));
+				if(app.getRobot() ==null) {
+					app.setRobot(new Robot(new Client(5005, app)));
+				}
 			case "rbefehlseingabe":
 				app.getScene().lookup("#mmButtons").setVisible(false);
 				app.getScene().lookup("#rEingabeBox").setVisible(true);
 				break;
 			case "tServerConnect":
-				app.setTracking(new Tracking(new Client(5000, app)));
+				if(app.getTracking() == null) {
+					app.setTracking(new Tracking(new Client(5000, app)));
+				}
 			case "tbefehlseingabe":
 				app.getScene().lookup("#mmButtons").setVisible(false);
 				app.getScene().lookup("#tEingabeBox").setVisible(true);
@@ -42,18 +48,25 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				app.getScene().lookup("#tEingabeBox").setVisible(false);
 				app.getScene().lookup("#kaliButtons").setVisible(false);
 				break;
-		     case "endPos":
-	            app.getRobot().endPos();
-	            break;
-		     case "kaliHM":
-		    	app.getScene().lookup("#mmButtons").setVisible(false);
-				app.getScene().lookup("#kaliButtons").setVisible(true);
+			case "endPos":
+				app.getRobot().endPos();
 				break;
-		     case "moveRobot":
-		    	 //app.getCalibration().moveRobotPTP();
+			case "kaliHM":
+				 app.createCalibration(3);
+				 if (app.getCalibration() != null) {
+					 app.getScene().lookup("#mmButtons").setVisible(false);
+					 app.getScene().lookup("#kaliButtons").setVisible(true);
+				 }
+				break;
+			case "moveRobot":
+		    	 app.getCalibration().moveRobotPTP();
 		    	 break;
-		     case "kalibrierung":
+			case "kalibrierung":
+				 app.getCalibration().constructLinearEquation();
 		    	 break;
+			default:
+				System.out.println("Button not ready yet");
+				break;
 			
 		}
 	}

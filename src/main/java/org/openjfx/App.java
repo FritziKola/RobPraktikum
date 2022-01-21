@@ -55,6 +55,7 @@ public class App extends Application {
         initTrackingInput();
         
         stage.show();
+
         
         // Testdaten Marker (Splicer):
         // Splicer.returnMatrix("1639716756.780680 y 0.05546889 0.04634489 0.99738426 -234.14794922 -0.07443932 0.99633410 -0.04215620 -186.64950562 -0.99568167 -0.07190625 0.05871543 -1985.50878906 0.147736");
@@ -150,10 +151,10 @@ public class App extends Application {
     	kalibrierung.setId("kalibrierung");
     	kaliButtons.getChildren().add(kalibrierung);
     	Button leererB1 = new Button("Leerer Buttons 1");
-    	leererB1.setId("moveRobot");
+    	leererB1.setId("leer1");
     	kaliButtons.getChildren().add(leererB1);
     	Button leererB2 =new Button("Leerer Button 2");
-    	leererB2.setId("kalibrierung");
+    	leererB2.setId("leer2");
     	kaliButtons.getChildren().add(leererB2);
     	Button backToMmButton = new Button("Back to Menu");
 		backToMmButton.setId("backToMenu");
@@ -214,6 +215,16 @@ public class App extends Application {
         		b.addEventHandler(ActionEvent.ACTION, bh);
         	}
         }
+	}
+
+	public void createCalibration(int measurements){
+		if(robot != null && tracking != null){
+			calibration = new Calibration(robot,tracking, measurements);
+		}
+		else {
+			System.out.println("No Robot or Tracking server, try again don't proceed");
+		}
+
 	}
 
 	public static void main(String[] args) {

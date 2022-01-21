@@ -22,6 +22,11 @@ public class Tracking {
         client.sendAndReceive("FORMAT_MATRIXROWWISE");
 	}
 
+
+    /**
+     * TODO: Klasse takeMeasurement die eine Messung vor nimmt
+     */
+
     /**
      * Send a message to the Tracking server and receives an answer
      * @param message The message send to the server
@@ -37,6 +42,9 @@ public class Tracking {
     public void send(String message){
         client.send(message);
     }
+
+    public void disconnect() {client.sendAndReceive("CM_QUITCONNECTION");}
+
 
     /**
      * Receives a message form the Tracking server

@@ -21,8 +21,12 @@ public class Robot {
      */
     public void connectToRobot(){
         client.sendAndReceive("Hello Robot");
-        client.sendAndReceive("SetVerbosity 5");
+        client.sendAndReceive("SetAdeptSpeed 5");
     }
+
+    /**
+     * TODO: Klasse getToPoint, die ,mit Hilfe einer übergeben Matrix an einem Punkt fährt
+     */
 
     public void setSpeed(String speed){
         client.sendAndReceive("SetAdeptSpeed " + speed);
@@ -53,7 +57,9 @@ public class Robot {
      * @return The message from the Robot
      */
     public String received(){
-        return client.received();
+        String answer = client.received();
+        System.out.println(answer);
+        return answer;
     }
 
     /**
