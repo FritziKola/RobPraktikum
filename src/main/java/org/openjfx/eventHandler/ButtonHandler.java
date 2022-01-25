@@ -27,17 +27,13 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				if(app.getTracking() != null){app.getTracking().disconnect();}
 				System.exit(0);
 			case "rServerConnect":
-				if(app.getRobot() ==null) {
-					app.setRobot(new Robot(new Client(5005, app)));
-				}
+				if(app.getRobot() ==null){app.setRobot(new Robot(new Client(5005, app)));}
 			case "rbefehlseingabe":
 				app.getScene().lookup("#mmButtons").setVisible(false);
 				app.getScene().lookup("#rEingabeBox").setVisible(true);
 				break;
 			case "tServerConnect":
-				if(app.getTracking() == null) {
-					app.setTracking(new Tracking(new Client(5000, app)));
-				}
+				if(app.getTracking() == null){app.setTracking(new Tracking(new Client(5000, app)));}
 			case "tbefehlseingabe":
 				app.getScene().lookup("#mmButtons").setVisible(false);
 				app.getScene().lookup("#tEingabeBox").setVisible(true);
@@ -52,7 +48,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				app.getRobot().endPos();
 				break;
 			case "kaliHM":
-				 app.createCalibration(3);
+				 app.createCalibration(3, "");
 				 if (app.getCalibration() != null) {
 					 app.getScene().lookup("#mmButtons").setVisible(false);
 					 app.getScene().lookup("#kaliButtons").setVisible(true);
@@ -68,7 +64,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				System.out.println("Button not ready yet");
 				break;
 			case "testMenue":
-				// Funktion hier einfügen
+				app.createCalibration(3, "test");
 				break; 
 			
 		}

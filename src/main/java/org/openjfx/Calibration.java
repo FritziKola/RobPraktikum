@@ -25,10 +25,29 @@ public class Calibration {
         this.measurements =measurements;
     }
 
+    public Calibration(){
+        measurements = 3;
+        robotMatricesM = new Matrix[measurements];
+        trackingMatricesN = new Matrix[measurements];
+        robotMatricesM[0] = splicer("-0.000157 -0.000026 -1.000000 243.887559 -0.000210 -1.000000 0.000026 -0.006431 -1.000000 0.000210 0.000157 607.415702");
+        robotMatricesM[1] = splicer("-0.766045 -0.000000 -0.642787 392.314422 0.000000 -1.000000 0.000000 -0.000000 -0.642787 -0.000000 0.766045 380.774049");
+        robotMatricesM[2] = splicer("0.000000 -0.000000 -1.000000 925.000000 0.000000 -1.000000 0.000000 -0.000000 -1.000000 -0.000000 -0.000000 425.000000");
+        trackingMatricesN[0] = splicer("1639716756.780680 y 0.05546889 0.04634489 0.99738426 -234.14794922 -0.07443932 0.99633410 -0.04215620 -186.64950562 -0.99568167 -0.07190625 0.05871543 -1985.50878906 0.147736");
+        trackingMatricesN[1] = splicer("1639716981.679953 y -0.72629377 0.00262051 0.68737944 -0.36194992 -0.08803279 0.99140342 -0.09679610 -167.93530273 -0.68172398 -0.13081433 -0.71981944 -1806.91918945 0.093774");
+        trackingMatricesN[2] = splicer("1639717123.702840 y 0.06013126 0.04368401 0.99723414 -95.07962799 -0.07769729 0.99621568 -0.03895440 -140.97337341 -0.99516198 -0.07514002 0.06329783 -1294.53027344 0.110417");
+
+        Matrix b = creatB();
+        Matrix A = creatA(creatAi(getRotationPart()));
+        QRDecomposition QR = new QRDecomposition(A);
+        Matrix qr = QR.solve(b);
+        qr.print(10,5);
+        getXY(qr);
+    }
+
     public void constructLinearEquation(){
         robot.setSpeed("20");
         gatherDate();
-        Matrix b = creatB(getTranslationalPart());
+        Matrix b = creatB();
         Matrix A = creatA(creatAi(getRotationPart()));
         QRDecomposition QR = new QRDecomposition(A);
         Matrix qr = QR.solve(b);
@@ -66,7 +85,7 @@ public class Calibration {
         double[][] a = new double[measurements*12][24];
         for(int i = 0; i < 24; i++){
             for(int j = 0, k =-1; j< measurements*12;j ++){
-                if( j % 12 == 0){k++;};
+                if( j % 12 == 0){k++;}
                 a[j][i]= ai[k].get(j%12, i);
             }
         }
@@ -95,7 +114,7 @@ public class Calibration {
                     else {
                         if(i<3){x=0;} else if(i<6){x=1;} else {x=2;}
                         if(j<3){y=0;} else if(j<6){y=1;} else if(j<9){y=2;} else {y=3;}
-                        ai[j][i] = rotationalPart[k].get(j % 3, i % 3)*trackingMatricesN[k].get(x,y);;
+                        ai[j][i] = rotationalPart[k].get(j % 3, i % 3)*trackingMatricesN[k].get(x,y);
                     }
                     if(i >= 9  && i <12 && j >=9){
                         ai[j][i] = rotationalPart[k].get(j % 3, i % 3);
@@ -112,7 +131,8 @@ public class Calibration {
      * bi is used to creat b for the Aw=b equation
      * @return b
      */
-    private Matrix creatB(Matrix[] translationalPart){
+    private Matrix creatB(){
+        Matrix[] translationalPart =getTranslationalPart();
         Matrix zeroNineByOne = new Matrix(9, 1);
         Matrix[] bees =new Matrix[measurements];
         double[][] b = new double[12*measurements][1];

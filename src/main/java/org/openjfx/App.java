@@ -298,9 +298,18 @@ public class App extends Application {
         }
 	}
 
-	public void createCalibration(int measurements){
+
+	/**
+	 * TODO: schöner machen!
+	 * @param measurements
+	 * @param test
+	 */
+	public void createCalibration(int measurements, String test){
 		if(robot != null && tracking != null){
 			calibration = new Calibration(robot,tracking, measurements);
+		}
+		else if(test.equals("test")){
+			calibration = new Calibration();
 		}
 		else {
 			System.out.println("No Robot or Tracking server, try again don't proceed");
