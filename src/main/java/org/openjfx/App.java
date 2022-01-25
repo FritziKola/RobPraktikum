@@ -12,10 +12,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -39,7 +41,8 @@ public class App extends Application {
 	
     @Override
     public void start(Stage stage) {
-        scene = new Scene(new StackPane(),717, 600);
+        scene = new Scene(new StackPane(), 900, 600);
+        scene.getStylesheets().add(getClass().getResource("css/style.css").toExternalForm());
         stage.setResizable(false);
         stage.setScene(scene);
         
@@ -53,6 +56,8 @@ public class App extends Application {
         initHMKalibrierung();
         
         initTrackingInput();
+        
+        //initTestInput();
         
         stage.show();
 
@@ -76,37 +81,59 @@ public class App extends Application {
 		endPos.addEventFilter(ActionEvent.ACTION, bh);
 		HBox hb = new HBox();
 		GridPane grid = new GridPane();
+		ColumnConstraints left = new ColumnConstraints();
+		left.setPercentWidth(75);
+		grid.getColumnConstraints().add(left);
+		ColumnConstraints right = new ColumnConstraints();
+		right.setPercentWidth(25);
+		grid.getColumnConstraints().add(right);
+		
+	
 		RowConstraints biggy = new RowConstraints();
 		biggy.setPercentHeight(89);
 		grid.getRowConstraints().add(biggy);
-		
 		RowConstraints smally = new RowConstraints();
 		smally.setPercentHeight(11);
 		grid.getRowConstraints().add(smally);
 		
+		FlowPane buttons = new FlowPane(Orientation.VERTICAL, 10, 20);
+		buttons.getChildren().add(backToMmButton);
+		buttons.getChildren().add(endPos);
 		Text ausgabetext = new Text();
 		ausgabetext.setId("rAusgabe");
 		ScrollPane ausgabe = new ScrollPane(ausgabetext);
 		ausgabe.setId("ausgabePan");
+		buttons.setAlignment(Pos.CENTER);
 		
+		//grid.add(buttons, 1, 0, 1, 2);
 		grid.add(ausgabe, 0 ,0);
 		grid.setId("rEingabeBox");
 		grid.add(hb, 0, 1);
 		//grid.setSpacing(10);
 		hb.getChildren().add(eingabe);
-		hb.getChildren().add(befehl);
-		hb.getChildren().add(backToMmButton);
-		hb.getChildren().add(endPos);
-		
+		hb.getChildren().add(befehl);	
+		grid.add(buttons, 1,0);
+		//hb.getChildren().add(backToMmButton);
+		//hb.getChildren().add(endPos);
+		//grid.add(backToMmButton, 1, 1);
+		//grid.add(endPos, 1, 1);
 		befehl.setPrefSize(500, 50);
 		grid.setVisible(false);
 		root.getChildren().add(grid);
+		for(Node node : buttons.getChildren()) {
+        	if(node instanceof Button) {
+        		Button b = (Button) node;
+        		b.setPrefSize(150, 70);
+        		b.addEventHandler(ActionEvent.ACTION, bh);
+        	}
+        }
 	}
     
     private void initTrackingInput() {
      	StackPane root = (StackPane) scene.getRoot();
     	Label eingabe = new Label("Eingabe:");
 		TextField befehl = new TextField();
+		FlowPane buttons = new FlowPane(Orientation.VERTICAL, 20, 40);
 		befehl.setId("tBefehl");
 		befehl.addEventHandler(KeyEvent.KEY_PRESSED, new KeyHandler(this));
 		Button backToMmButton = new Button("Back to Menu");
@@ -126,10 +153,18 @@ public class App extends Application {
 		ausgabetext.setId("tAusgabe");
 		ScrollPane ausgabe = new ScrollPane(ausgabetext);
 		ausgabe.setId("ausgabePan");
+		buttons.getChildren().add(backToMmButton);
+		buttons.setAlignment(Pos.CENTER);
+		//TODO Funktion einfügen für z.B. Geschwindigkeit vom Roboter einbauen
+		//Slider slider = new Slider(1, 20, 1);
+		//slider.setShowTickMarks(true);
 		
+		//grid.add(buttons, 1, 0, 1, 1);
 		grid.add(ausgabe, 0 ,0);
 		grid.setId("tEingabeBox");
 		grid.add(hb, 0, 1);
+		//buttons.getChildren().add(slider);
+		grid.add(buttons, 1,0);
 		//grid.setSpacing(10);
 		hb.getChildren().add(eingabe);
 		hb.getChildren().add(befehl);
@@ -139,6 +174,48 @@ public class App extends Application {
 		grid.setVisible(false);
 		root.getChildren().add(grid);
 	}
+/*  private void initTestInput() {
+        	StackPane root = (StackPane) scene.getRoot();
+        	Label eingabe = new Label("Eingabe:");
+    		TextField befehl = new TextField();
+    		befehl.setId("testBefehl");
+    		befehl.addEventHandler(KeyEvent.KEY_PRESSED, new KeyHandler(this));
+    		
+    		Button backToMmButton = new Button("Back to Menu");
+    		backToMmButton.setId("backToMenu");
+    		backToMmButton.addEventFilter(ActionEvent.ACTION, bh);
+    		Button endPos = new Button("EndPosition");
+    		endPos.setId("endPos");
+    		endPos.addEventFilter(ActionEvent.ACTION, bh);
+    		HBox hb = new HBox();
+    		GridPane grid = new GridPane();
+    		RowConstraints biggy = new RowConstraints();
+    		biggy.setPercentHeight(89);
+    		grid.getRowConstraints().add(biggy);
+    		
+    		RowConstraints smally = new RowConstraints();
+    		smally.setPercentHeight(11);
+    		grid.getRowConstraints().add(smally);
+    		
+    		Text ausgabetext = new Text();
+    		ausgabetext.setId("rAusgabe");
+    		ScrollPane ausgabe = new ScrollPane(ausgabetext);
+    		ausgabe.setId("ausgabePan");
+    		
+    		grid.add(ausgabe, 0 ,0);
+    		grid.setId("rEingabeBox");
+    		grid.add(hb, 0, 1);
+    		//grid.setSpacing(10);
+    		hb.getChildren().add(eingabe);
+    		hb.getChildren().add(befehl);
+    		hb.getChildren().add(backToMmButton);
+    		hb.getChildren().add(endPos);
+    		
+    		befehl.setPrefSize(500, 50);
+    		grid.setVisible(false);
+    		root.getChildren().add(grid);
+    	
+    } */
     
     private void initHMKalibrierung() {
     	StackPane root = (StackPane) scene.getRoot();
@@ -178,12 +255,13 @@ public class App extends Application {
 
 	private void initMainMenu() {
     	StackPane root = (StackPane) scene.getRoot();
-        root.setBackground(new Background(new BackgroundFill(Color.ROSYBROWN, null, null)));
+    	Color bg = Color.web("0xDCD3CE");
+        root.setBackground(new Background(new BackgroundFill(bg, null, null)));
         root.setPrefWidth(scene.getWidth());
         root.setPrefHeight(scene.getHeight());
         FlowPane mainMenuButtons = new FlowPane(Orientation.VERTICAL, 20, 40);
         mainMenuButtons.setId("mmButtons");
-        mainMenuButtons.setBackground(new Background(new BackgroundFill(Color.ROSYBROWN, null, null)));
+        mainMenuButtons.setBackground(new Background(new BackgroundFill(bg, null, null)));
         mainMenuButtons.setMaxHeight(400);
         mainMenuButtons.setMaxWidth(200);
         root.getChildren().add(mainMenuButtons);
@@ -204,6 +282,9 @@ public class App extends Application {
         Button kaliHM = new Button("Kalibrierung");
         kaliHM.setId("kaliHM");
         mainMenuButtons.getChildren().add(kaliHM);
+        Button testMenue = new Button("TestMenue");
+        testMenue.setId("testMenue");
+        mainMenuButtons.getChildren().add(testMenue);
         Button exitButton = new Button("Exit");
         exitButton.setId("exit");
         mainMenuButtons.getChildren().add(exitButton);

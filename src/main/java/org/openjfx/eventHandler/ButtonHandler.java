@@ -67,6 +67,9 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 			default:
 				System.out.println("Button not ready yet");
 				break;
+			case "testMenue":
+				// Funktion hier einfügen
+				break; 
 			
 		}
 	}
