@@ -1,5 +1,8 @@
 package org.openjfx;
 
+import externalThings.Jama.Matrix;
+import javafx.scene.effect.Light;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +34,11 @@ public class Robot {
     }
 
     /**
-     * TODO: Klasse getToPoint, die ,mit Hilfe einer übergeben Matrix an einem Punkt fährt
+     * Moves robot endefektor to point
      */
+    public void moveToPoint(Matrix point, Matrix X, Matrix Y){
+        Matrix M = Y.times(point).times(X.inverse());
+    }
 
     public void setSpeed(String speed){
         client.sendAndReceive("SetAdeptSpeed " + speed);

@@ -33,14 +33,71 @@ public class Calibration {
     public Calibration(){
         measurements = 3;
         robotMatricesM = new Matrix[measurements];
-        trackingMatricesN = new Matrix[measurements];
-        robotMatricesM[0] = splicer("-0.000157 -0.000026 -1.000000 243.887559 -0.000210 -1.000000 0.000026 -0.006431 -1.000000 0.000210 0.000157 607.415702");
-        robotMatricesM[1] = splicer("-0.766045 -0.000000 -0.642787 392.314422 0.000000 -1.000000 0.000000 -0.000000 -0.642787 -0.000000 0.766045 380.774049");
-        robotMatricesM[2] = splicer("0.000000 -0.000000 -1.000000 925.000000 0.000000 -1.000000 0.000000 -0.000000 -1.000000 -0.000000 -0.000000 425.000000");
-        trackingMatricesN[0] = splicer("1639716756.780680 y 0.05546889 0.04634489 0.99738426 -234.14794922 -0.07443932 0.99633410 -0.04215620 -186.64950562 -0.99568167 -0.07190625 0.05871543 -1985.50878906 0.147736");
-        trackingMatricesN[1] = splicer("1639716981.679953 y -0.72629377 0.00262051 0.68737944 -0.36194992 -0.08803279 0.99140342 -0.09679610 -167.93530273 -0.68172398 -0.13081433 -0.71981944 -1806.91918945 0.093774");
-        trackingMatricesN[2] = splicer("1639717123.702840 y 0.06013126 0.04368401 0.99723414 -95.07962799 -0.07769729 0.99621568 -0.03895440 -140.97337341 -0.99516198 -0.07514002 0.06329783 -1294.53027344 0.110417");
+        trackingMatricesN = new Matrix[measurements];/*
+        trackingMatricesN[0] = parser("0.05547     0.04634     0.99738  -234.14795 -0.07444     0.99633    -0.04216  -186.64951 -0.99568    -0.07191     0.05872 -1985.50879");
+        trackingMatricesN[1] = parser("-0.72629     0.00262     0.68738    -0.36195 -0.08803     0.99140    -0.09680  -167.93530 -0.68172    -0.13081    -0.71982 -1806.91919");
+        trackingMatricesN[2] = parser("0.06013     0.04368     0.99723   -95.07963-0.07770     0.99622    -0.03895  -140.97337-0.99516    -0.07514 0.06330 -1294.53027");
+        robotMatricesM[0] = parser("-0.00016    -0.00003    -1.00000   243.88756 -0.00021    -1.00000     0.00003    -0.00643 -1.00000     0.00021 0.00016 607.41571");
+        robotMatricesM[1] = parser("-0.76604    -0.00000    -0.64279   392.31442 0.00000    -1.00000     0.00000    -0.00000 -0.64279    -0.00000    z0.76604 380.77405");
+        robotMatricesM[2] = parser("0.00000    -0.00000    -1.00000   925.00000 0.00000    -1.00000     0.00000    -0.00000 -1.00000    -0.00000    -0.00000 425.00000");
+        invers();*/
+        double[][] m1 = {{-0.00016, -0.00003, -1.00000, 243.88756},
+                {-0.00021, -1.00000, 0.00003,-0.00643},
+                {-1.00000, 0.00021, 0.00016, 607.41571},
+                {0.00000, 0.00000, 0.00000, 1.00000}};
 
+
+        double[][] m2 = {{-0.76604  ,  -0.00000 ,   -0.64279,   392.31442},
+                {0.00000    ,-1.00000    , 0.00000  ,  -0.00000},
+                {-0.64279 ,   -0.00000  ,   0.76604 ,  380.77405},
+                {0.00000   ,  0.00000  ,   0.00000     ,1.00000}};
+
+
+        double[][] m3 = {{0.00000 ,   -0.00000 ,   -1.00000   ,925.00000},
+                {0.00000  ,  -1.00000   ,  0.00000   , -0.00000},
+                {      -1.00000  ,  -0.00000   , -0.00000 ,  425.00000},
+                {0.00000   ,  0.00000    , 0.00000   ,  1.00000}};
+
+        double[][] n1 = {{0.05547 ,    0.04634    , 0.99738 , -234.14795},
+                {-0.07444  ,   0.99633   , -0.04216  ,-186.64951},
+                {-0.99568   , -0.07191    , 0.05872 ,-1985.50879},
+                {0.00000   ,  0.00000   ,  0.00000   ,  1.00000}};
+
+
+        double[][] n2 = {{  -0.72629   ,  0.00262   ,  0.68738  ,  -0.36195},
+                {-0.08803   ,  0.99140  ,  -0.09680 , -167.93530},
+                {-0.68172  ,  -0.13081  ,  -0.71982 ,-1806.91919},
+                {0.00000   ,  0.00000   ,  0.00000   ,  1.00000}};
+
+
+        double[][] n3 = {{0.06013    , 0.04368  ,   0.99723  , -95.07963},
+                { -0.07770    , 0.99622  ,  -0.03895 , -140.97337},
+                {-0.99516 ,   -0.07514   ,  0.06330 ,-1294.53027},
+                { 0.00000    , 0.00000 ,    0.00000 ,    1.00000}};
+        robotMatricesM[0] = new Matrix(m1);
+        robotMatricesM[1] = new Matrix(m2);
+        robotMatricesM[2] = new Matrix(m3);
+        trackingMatricesN[0] = new Matrix(n1);
+        trackingMatricesN[1] = new Matrix(n2);
+        trackingMatricesN[2] = new Matrix(n3);
+        inverse();
+        /*
+        robotMatricesM[0] = new Matrix( new double[][] {{-0.18, 0, 0.98, 928.232},
+                {0.01, 1, 0, 8.509},
+                {-0.98, 0.01, -0.18, 392.979},
+                {0, 0, 0, 1}});
+        robotMatricesM[1] = new Matrix( new double[][] {{-0.24, -0.18, 0.95, 889.02},
+                {0.28, 0.93, 0.25, 226.827},
+                {-0.93, 0.33, -0.17, 173.287},
+                {0, 0, 0, 1}});
+        trackingMatricesN[0] = new Matrix(new double[][]{{-0.13, 0.4, -1, -36.3},
+                {-0.05, -1, -0.03, -175.7},
+                {-1, 0.04, 0.13, -1285.77},
+                {0, 0, 0, 1}});
+        trackingMatricesN[1] = new Matrix(new double[][]{{-0.12, -0.23, -0.97, 173.64},
+                {-0.32, -0.91, 0.26, 53.77},
+                {-0.94, 0.34, 0.03, -1320.49},
+                {0, 0, 0, 1}});*/
         Matrix b = createB();
         Matrix A = createA();
         QRDecomposition QR = new QRDecomposition(A);
@@ -51,9 +108,9 @@ public class Calibration {
     }
 
     /**
-     *
+     * Solves calibration and sets X and Y
      */
-    public void constructLinearEquation(){
+    public void solveCalibration(){
         gatherDate();
         QRDecomposition QR = new QRDecomposition(createA());
         Matrix qr = QR.solve(createB());
@@ -165,12 +222,10 @@ public class Calibration {
         for(int i = 0; i < measurements; i++){
             TM[i] = robotMatricesM[i].getMatrix(0,2,3,3);
         }
-
         System.out.println("TM: ");
         for(Matrix n:TM){
             n.print(10, 5);
         }
-
         return TM;
     }
 
@@ -192,8 +247,18 @@ public class Calibration {
         return RM;
     }
 
+
+    /**
+     * inverses robot matrices
+     * TODO: Herausfinden ob das gebraucht wird oder nicht
+     */
+    private void inverse(){
+        for (int i =0; i < measurements; i++){ robotMatricesM[i]=robotMatricesM[i].inverse(); }
+    }
+
     /**
      * Moves the robot randomly and takes measurements while doing so
+     * TODO: ueberprüfen ob man den alter wirklich brauch
      */
     private void gatherDate(){
         robotMatricesM = new Matrix[measurements];
@@ -203,10 +268,10 @@ public class Calibration {
             moveRobotPTP();
             robot.sendAndReceive("EnableAlter");
             robot.send("GetPositionHomRowWise");
-            robotMatricesM[i] = splicer(robot.received());
+            robotMatricesM[i] = parser(robot.received());
             robot.sendAndReceive("DisableAlter");
             tracking.send("CM_NEXTVALUE");
-            trackingMatricesN[i] = splicer(tracking.received());
+            trackingMatricesN[i] = parser(tracking.received());
         }
         robot.setSpeed("5");
         /* debug Kommentare */
@@ -235,7 +300,7 @@ public class Calibration {
             else{ joints[i] += new Random().nextInt(35); }
         }
         joints[4] = 0; joints[5] = 0;
-        String robotCom = Arrays.toString(joints).replaceAll("\\[|\\]|\\,", "");
+        String robotCom = Arrays.toString(joints).replaceAll("\\[|]|,", "");
         System.out.println(robotCom);
         robot.send("MovePTPJoints " + robotCom);
         if(robot.received().equals("false")){
@@ -248,7 +313,7 @@ public class Calibration {
      * @param input Values got by the servers
      * @return A double that can be put into a matrix
      */
-    private Matrix splicer(String input){
+    public Matrix parser(String input){
         double[][] matrix = new double[4][4];
         String[] rowWise = input.split(" ");
         if(input.contains("y")){
@@ -268,10 +333,12 @@ public class Calibration {
                 }
             }
         }
+        else { System.out.println("WARNING: No connection to Marker");}
         for(int l = 0; l < 3; l++){ matrix[3][l] = 0; }
         matrix[3][3] = 1;
-
-        return new Matrix(matrix);
+        Matrix m = new Matrix(matrix);
+        m.print(10, 5);
+        return m;
     }
 
     public Matrix getX() { return X; }

@@ -62,8 +62,12 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 		    	 app.getCalibration().moveRobotPTP();
 		    	 break;
 			case "kalibrierung":
-				 app.getCalibration().constructLinearEquation();
-		    	 break;
+				 app.getCalibration().solveCalibration();
+				 break;
+			case "messung":
+				app.getTracking().takeMeasurements(app.getCalibration());
+			case "moveToPoint":
+				app.getRobot().moveToPoint(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY());
 			default:
 				System.out.println("Button not ready yet");
 				break;

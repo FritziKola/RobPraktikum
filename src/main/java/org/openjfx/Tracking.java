@@ -1,5 +1,7 @@
 package org.openjfx;
 
+import externalThings.Jama.Matrix;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ public class Tracking {
 
     private Client client;
     private List<String> history;
+    private Matrix measurement;
 
     /**
      * Constructor for the Tracking connection
@@ -29,8 +32,12 @@ public class Tracking {
 
 
     /**
-     * TODO: Klasse takeMeasurement die eine Messung vor nimmt
+     * Takes a measurement and safes it
      */
+    public void takeMeasurements(Calibration calibration){
+        client.send("CM_NEXTVALUE");
+        measurement = calibration.parser(client.received());
+    }
 
 
     /**
@@ -68,6 +75,8 @@ public class Tracking {
     public List<String> getHistory() {
 		return history;
 	}
+
+	public Matrix getMeasurement(){ return measurement; }
 
 
 
