@@ -57,15 +57,12 @@ public class App extends Application {
         
         initTrackingInput();
         
-        //initTestInput();
-        
         stage.show();
-
-        
-        // Testdaten Marker (Splicer):
-        // Splicer.returnMatrix("1639716756.780680 y 0.05546889 0.04634489 0.99738426 -234.14794922 -0.07443932 0.99633410 -0.04215620 -186.64950562 -0.99568167 -0.07190625 0.05871543 -1985.50878906 0.147736");
     }
-   
+
+	/**
+	 * Initializes robot menu scene
+	 */
     private void initRobotInput() {
     	StackPane root = (StackPane) scene.getRoot();
     	Label eingabe = new Label("Eingabe:");
@@ -132,7 +129,10 @@ public class App extends Application {
         	}
         }
 	}
-    
+
+	/**
+	 * Initializes tracking menu scene
+	 */
     private void initTrackingInput() {
      	StackPane root = (StackPane) scene.getRoot();
     	Label eingabe = new Label("Eingabe:");
@@ -232,7 +232,10 @@ public class App extends Application {
     		root.getChildren().add(grid);
     	
     } */
-    
+
+	/**
+	 * Initializes calibration  menu scene
+	 */
     private void initHMKalibrierung() {
     	StackPane root = (StackPane) scene.getRoot();
     	FlowPane kaliButtons = new FlowPane(Orientation.VERTICAL, 20, 40);
@@ -267,8 +270,10 @@ public class App extends Application {
         	}
         }
     }
-    
 
+	/**
+	 * Initializes main menu scene
+	 */
 	private void initMainMenu() {
     	StackPane root = (StackPane) scene.getRoot();
     	Color bg = Color.web("0xDCD3CE");
@@ -295,8 +300,8 @@ public class App extends Application {
         Button kaliHM = new Button("Kalibrierung");
         kaliHM.setId("kaliHM");
         mainMenuButtons.getChildren().add(kaliHM);
-        Button testMenue = new Button("TestMenue");
-        testMenue.setId("testMenue");
+        Button testMenue = new Button("TestMenu");
+        testMenue.setId("testMenu");
         mainMenuButtons.getChildren().add(testMenue);
         Button exitButton = new Button("Exit");
         exitButton.setId("exit");
@@ -318,15 +323,9 @@ public class App extends Application {
 	 * @param test
 	 */
 	public void createCalibration(int measurements, String test){
-		if(robot != null && tracking != null){
-			calibration = new Calibration(robot,tracking, measurements);
-		}
-		else if(test.equals("test")){
-			calibration = new Calibration();
-		}
-		else {
-			System.out.println("No Robot or Tracking server, try again don't proceed");
-		}
+		if(robot != null && tracking != null){ calibration = new Calibration(robot,tracking, measurements); }
+		else if(test.equals("test")){ calibration = new Calibration(); }
+		else { System.out.println("No Robot or Tracking server, try again don't proceed"); }
 
 	}
 
@@ -346,21 +345,13 @@ public class App extends Application {
 		this.tracking = tracking;
 	}
 	
-	public Tracking getTracking() {
-		return tracking;
-	}
-	
-	public void setScene(Scene scene) {
-		this.scene = scene;
-	}
+	public Tracking getTracking() { return tracking; }
+
 	
 	public Scene getScene() {
 		return scene;
 	}
-	
-	public void setCalibration(Calibration calibration) {
-		this.calibration = calibration;
-	}
+
 	public Calibration getCalibration() {
 		return calibration;
 	}

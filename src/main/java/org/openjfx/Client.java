@@ -45,9 +45,6 @@ public class Client {
     public void sendAndReceive(String message) {
         send(message);
         System.out.println("Received: " + received());
-//        if (message.equals("CM_NEXTVALUE") || message.equals("GetPositionHomRowWise")) {
-//            Splicer.returnMatrix(answer);
-//        }
     }
 
     /**
@@ -65,7 +62,7 @@ public class Client {
 
 
     /**
-     * Wating from an answer from the server
+     * Waiting from an answer from the server
      * @return The answer from the server
      */
     public String received(){

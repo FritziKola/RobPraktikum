@@ -67,7 +67,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 			default:
 				System.out.println("Button not ready yet");
 				break;
-			case "testMenue":
+			case "testMenu":
 				app.createCalibration(3, "test");
 				break; 
 			

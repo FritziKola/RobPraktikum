@@ -32,6 +32,7 @@ public class Tracking {
      * TODO: Klasse takeMeasurement die eine Messung vor nimmt
      */
 
+
     /**
      * Send a message to the Tracking server and receives an answer
      * @param message The message send to the server

@@ -12,12 +12,14 @@ public class Calibration {
     private Matrix[] robotMatricesM;
     private Matrix[] trackingMatricesN;
     private int measurements;
+    private Matrix X;
+    private Matrix Y;
 
     /**
-     *
-     *
-     * @param robot
-     * @param tracking
+     * Constructor for real calibration
+     * @param robot The robot in use
+     * @param tracking The tracking in use
+     * @param measurements The number auf measurements
      */
     public Calibration(Robot robot, Tracking tracking, int measurements){
         this.robot = robot;
@@ -25,6 +27,9 @@ public class Calibration {
         this.measurements =measurements;
     }
 
+    /**
+     * Constructor for test calibration
+     */
     public Calibration(){
         measurements = 3;
         robotMatricesM = new Matrix[measurements];
@@ -36,52 +41,47 @@ public class Calibration {
         trackingMatricesN[1] = splicer("1639716981.679953 y -0.72629377 0.00262051 0.68737944 -0.36194992 -0.08803279 0.99140342 -0.09679610 -167.93530273 -0.68172398 -0.13081433 -0.71981944 -1806.91918945 0.093774");
         trackingMatricesN[2] = splicer("1639717123.702840 y 0.06013126 0.04368401 0.99723414 -95.07962799 -0.07769729 0.99621568 -0.03895440 -140.97337341 -0.99516198 -0.07514002 0.06329783 -1294.53027344 0.110417");
 
-        Matrix b = creatB();
-        Matrix A = creatA(creatAi(getRotationPart()));
+        Matrix b = createB();
+        Matrix A = createA();
         QRDecomposition QR = new QRDecomposition(A);
         Matrix qr = QR.solve(b);
         qr.print(10,5);
-        getXY(qr);
-    }
-
-    public void constructLinearEquation(){
-        robot.setSpeed("20");
-        gatherDate();
-        Matrix b = creatB();
-        Matrix A = creatA(creatAi(getRotationPart()));
-        QRDecomposition QR = new QRDecomposition(A);
-        Matrix qr = QR.solve(b);
-        qr.print(10,5);
-        getXY(qr);
-
-
+        getXY(qr, 1).print(10,5);
+        getXY(qr, 2).print(10, 5);
     }
 
     /**
-     * TODO: Die  Methode soll die x und Y Matrizen ausgeben, funktiuoniert aber noch nicht
-     * @param w
-     * @return
+     *
      */
-    private Matrix getXY(Matrix w){
-        Matrix XY = new Matrix(4,4);
+    public void constructLinearEquation(){
+        gatherDate();
+        QRDecomposition QR = new QRDecomposition(createA());
+        Matrix qr = QR.solve(createB());
+        X = getXY(qr, 1);
+        Y = getXY(qr, 2);
+    }
 
-        for(int i = 0; i < 12; i++){
-            for(int j = 0; j < 4; j++){
-                if(j < 3) {XY.set(j, i %4 , w.get(i, 0));}
-                else{ XY.set(j,i %4,0);}
-            }
+    /**
+     * Returns the solution matrices, got fro the qr decomposition
+     * @param w Array with
+     * @param whichOne choosing between the X matrix with 1 or the Y matrix with 2
+     * @return Ether X or Y matrix
+     */
+    private Matrix getXY(Matrix w, int whichOne){
+        Matrix XY = new Matrix(4,4);
+        for(int i = (whichOne-1)*12, j=-1; i < 12*whichOne; i++){
+            if(i%3 == 0){j++;}
+            XY.set(i%3, j, w.get(i, 0));
         }
-        XY.set(3,3,1);
-        XY.print(10, 5);
         return XY;
     }
 
     /**
      * Creates one matrix 12*measurements X 24 out of an array of matrices
-     * @param ai Array of matrices
      * @return Matrix A
      */
-    private Matrix creatA(Matrix[] ai){
+    private Matrix createA(){
+        Matrix[] ai = createAi();
         double[][] a = new double[measurements*12][24];
         for(int i = 0; i < 24; i++){
             for(int j = 0, k =-1; j< measurements*12;j ++){
@@ -93,18 +93,17 @@ public class Calibration {
     }
 
     /**
-     * Creates an array of matrices neede for the QR-factorisation
-     * @param rotationalPart rotational Part of M
-     * @return An array of matrices ai that can be used to creat A
+     * Creates an array of matrices need for the QR-factorisation
+     * @return An array of matrices ai that can be used to create A
      */
-    private Matrix[] creatAi(Matrix[] rotationalPart) {
+    private Matrix[] createAi() {
+        Matrix[] rotationalPart = getRotationPart();
         Matrix[] aees = new Matrix[measurements];
         int x,y;
         for(int k = 0; k < measurements; k++) {
             double[][] ai = new double[12][24];
             for (int j = 0; j < 12; j++) {
                 for (int i = 0; i < 24; i++) {
-
                     if(i>=9 && i % 12 == j){
                         ai[j][i] = -1;
                     }
@@ -127,11 +126,11 @@ public class Calibration {
     }
 
     /**
-     * Takes the translational part of M_i and zeros to creat bi
-     * bi is used to creat b for the Aw=b equation
+     * Takes the translational part of M_i and zeros to create bi
+     * bi is used to create b for the Aw=b equation
      * @return b
      */
-    private Matrix creatB(){
+    private Matrix createB(){
         Matrix[] translationalPart =getTranslationalPart();
         Matrix zeroNineByOne = new Matrix(9, 1);
         Matrix[] bees =new Matrix[measurements];
@@ -199,6 +198,7 @@ public class Calibration {
     private void gatherDate(){
         robotMatricesM = new Matrix[measurements];
         trackingMatricesN =  new Matrix[measurements];
+        robot.setSpeed("40");
         for(int i = 0 ;i < measurements; i++){
             moveRobotPTP();
             robot.sendAndReceive("EnableAlter");
@@ -207,10 +207,10 @@ public class Calibration {
             robot.sendAndReceive("DisableAlter");
             tracking.send("CM_NEXTVALUE");
             trackingMatricesN[i] = splicer(tracking.received());
-
         }
+        robot.setSpeed("5");
         /* debug Kommentare */
-
+        /*
         System.out.println("Matrizen des Roboters: ");
         for(Matrix m :robotMatricesM){
             m.print(10, 5);
@@ -219,6 +219,8 @@ public class Calibration {
         for(Matrix m : trackingMatricesN){
             m.print(10,5);
         }
+
+         */
     }
 
     /**
@@ -228,13 +230,9 @@ public class Calibration {
      */
     public void moveRobotPTP(){
         int[] joints = new int[]  {0,-150, 150, 0, 0, 0};
-
         for(int i = 0; i <= 4; i++){
-            if (new Random().nextInt(2) == 1){
-                joints[i] += new Random().nextInt(25)*(-1);
-            } else{
-                joints[i] += new Random().nextInt(25);
-            }
+            if (new Random().nextInt(2) == 1){ joints[i] += new Random().nextInt(35)*(-1); }
+            else{ joints[i] += new Random().nextInt(35); }
         }
         joints[4] = 0; joints[5] = 0;
         String robotCom = Arrays.toString(joints).replaceAll("\\[|\\]|\\,", "");
@@ -261,7 +259,6 @@ public class Calibration {
                     i ++;
                 }
             }
-
         } else if(!input.contains("n")) {
             int i = 0;
             for(int j= 0; j <3; j++ ){
@@ -271,15 +268,13 @@ public class Calibration {
                 }
             }
         }
-        for(int l = 0; l < 3; l++){
-            matrix[3][l] = 0;
-        }
+        for(int l = 0; l < 3; l++){ matrix[3][l] = 0; }
         matrix[3][3] = 1;
 
         return new Matrix(matrix);
     }
 
+    public Matrix getX() { return X; }
 
-
-
+    public Matrix getY() { return Y; }
 }
