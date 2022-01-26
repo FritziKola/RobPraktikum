@@ -7,8 +7,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import javafx.scene.control.TextArea;
 
 
 public class Client {
@@ -58,9 +57,9 @@ public class Client {
     public void send(String message) {
         System.out.println("Sending: "+ message);
         writer.println(message);
-        Text sended = port == 5005 ? (Text) app.getScene().lookup("#rAusgabe") : (Text) app.getScene().lookup("#tAusgabe");
-        sended.setText(sended.getText() + "\n" + message);
-        sended.setFill(Color.MEDIUMPURPLE);
+        TextArea sent = port == 5005 ? (TextArea) app.getScene().lookup("#rAusgabe") : (TextArea) app.getScene().lookup("#tAusgabe");
+        sent.setText(sent.getText() + "\n" + message);
+        
     }
 
 
@@ -73,9 +72,8 @@ public class Client {
         String answer = null;
         try {
             answer = reader.readLine();
-            Text receive = port == 5005 ? (Text) app.getScene().lookup("#rAusgabe") : (Text) app.getScene().lookup("#tAusgabe");
+            TextArea receive = port == 5005 ? (TextArea) app.getScene().lookup("#rAusgabe") : (TextArea) app.getScene().lookup("#tAusgabe");
             receive.setText(receive.getText() + "\n" + answer);
-            receive.setFill(Color.DARKSLATEGREY);
         } catch(Exception e){
             System.out.println("received methode didn't work.");
         }

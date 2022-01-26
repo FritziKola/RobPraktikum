@@ -1,8 +1,13 @@
 package org.openjfx;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Robot {
 	
     private Client client;
+    
+    private List<String> history;
 
     /**
      * Constructor for Robot
@@ -11,6 +16,7 @@ public class Robot {
      */
     public Robot(Client client){
         this.client = client;
+        this.history = new ArrayList<String>();
         System.out.println("Received: " + client.received());
         connectToRobot();
     }
@@ -37,6 +43,7 @@ public class Robot {
      * @param message The message send to the server
      */
     public void sendAndReceive(String message){
+    	makeHistory(message);
         client.sendAndReceive(message);
     }
 
@@ -66,6 +73,14 @@ public class Robot {
      * Brings the robot in end position
      */
     public void endPos() { 
-    	client.sendAndReceive("MovePTPJoints 0 -150 150 0 0 0");
+    	sendAndReceive("MovePTPJoints 0 -150 150 0 0 0");
     }
+    
+    private void makeHistory(String input) {
+    	this.history.add(input);
+    }
+    
+    public List<String> getHistory() {
+		return history;
+	}
 }

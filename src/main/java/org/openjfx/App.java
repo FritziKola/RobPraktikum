@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
@@ -24,7 +25,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -75,10 +75,8 @@ public class App extends Application {
 		
 		Button backToMmButton = new Button("Back to Menu");
 		backToMmButton.setId("backToMenu");
-		backToMmButton.addEventFilter(ActionEvent.ACTION, bh);
 		Button endPos = new Button("EndPosition");
 		endPos.setId("endPos");
-		endPos.addEventFilter(ActionEvent.ACTION, bh);
 		HBox hb = new HBox();
 		GridPane grid = new GridPane();
 		ColumnConstraints left = new ColumnConstraints();
@@ -99,12 +97,18 @@ public class App extends Application {
 		FlowPane buttons = new FlowPane(Orientation.VERTICAL, 10, 20);
 		buttons.getChildren().add(backToMmButton);
 		buttons.getChildren().add(endPos);
-		Text ausgabetext = new Text();
+		TextArea ausgabetext = new TextArea();
 		ausgabetext.setId("rAusgabe");
+		ausgabetext.setEditable(false);
+		ausgabetext.setPrefWidth(scene.getWidth() * .75 - 2);
+		ausgabetext.setPrefHeight(scene.getHeight() * .89 - 2);
 		ScrollPane ausgabe = new ScrollPane(ausgabetext);
 		ausgabe.setId("ausgabePan");
 		buttons.setAlignment(Pos.CENTER);
-		
+		//TODO Funktion einfügen für z.B. Geschwindigkeit vom Roboter einbauen
+		Slider slider = new Slider(1, 20, 1);
+		slider.setShowTickMarks(true);
+		buttons.getChildren().add(slider);
 		//grid.add(buttons, 1, 0, 1, 2);
 		grid.add(ausgabe, 0 ,0);
 		grid.setId("rEingabeBox");
@@ -144,35 +148,47 @@ public class App extends Application {
 		RowConstraints biggy = new RowConstraints();
 		biggy.setPercentHeight(89);
 		grid.getRowConstraints().add(biggy);
-		
 		RowConstraints smally = new RowConstraints();
 		smally.setPercentHeight(11);
 		grid.getRowConstraints().add(smally);
-		
-		Text ausgabetext = new Text();
+		ColumnConstraints left = new ColumnConstraints();
+		left.setPercentWidth(75);
+		grid.getColumnConstraints().add(left);
+		ColumnConstraints right = new ColumnConstraints();
+		right.setPercentWidth(25);
+		grid.getColumnConstraints().add(right);
+		TextArea ausgabetext = new TextArea();
 		ausgabetext.setId("tAusgabe");
+		ausgabetext.setEditable(false);
+		ausgabetext.setPrefWidth(scene.getWidth() * .75 - 2);
+		ausgabetext.setPrefHeight(scene.getHeight() * .89 - 2);
 		ScrollPane ausgabe = new ScrollPane(ausgabetext);
 		ausgabe.setId("ausgabePan");
 		buttons.getChildren().add(backToMmButton);
 		buttons.setAlignment(Pos.CENTER);
-		//TODO Funktion einfügen für z.B. Geschwindigkeit vom Roboter einbauen
-		//Slider slider = new Slider(1, 20, 1);
-		//slider.setShowTickMarks(true);
 		
-		//grid.add(buttons, 1, 0, 1, 1);
+		
+		//grid.add(buttons, 1, 0, 1, 2);
 		grid.add(ausgabe, 0 ,0);
 		grid.setId("tEingabeBox");
 		grid.add(hb, 0, 1);
-		//buttons.getChildren().add(slider);
+		
 		grid.add(buttons, 1,0);
 		//grid.setSpacing(10);
 		hb.getChildren().add(eingabe);
 		hb.getChildren().add(befehl);
-		hb.getChildren().add(backToMmButton);
 		
 		befehl.setPrefSize(500, 50);
 		grid.setVisible(false);
 		root.getChildren().add(grid);
+		for(Node node : buttons.getChildren()) {
+        	if(node instanceof Button) {
+        		Button b = (Button) node;
+        		b.setPrefSize(150, 70);
+        		b.addEventHandler(ActionEvent.ACTION, bh);
+        	}
+		}
+		
 	}
 /*  private void initTestInput() {
         	StackPane root = (StackPane) scene.getRoot();
@@ -267,12 +283,9 @@ public class App extends Application {
         root.getChildren().add(mainMenuButtons);
         root.setAlignment(Pos.CENTER);
         
-        Button rServerButton = new Button("RobServer verbinden");
-        rServerButton.setId("rServerConnect");
-        mainMenuButtons.getChildren().add(rServerButton);
-        Button tServerButton = new Button("TrackingServer verbinden");
-        tServerButton.setId("tServerConnect");
-        mainMenuButtons.getChildren().add(tServerButton);
+        Button serverButton = new Button("Server verbinden");
+        serverButton.setId("serverConnect");
+        mainMenuButtons.getChildren().add(serverButton);
         Button rbefehlseingabe = new Button("RobServer Befehlseingabe"); 
         rbefehlseingabe.setId("rbefehlseingabe");
         mainMenuButtons.getChildren().add(rbefehlseingabe);

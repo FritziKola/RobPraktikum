@@ -8,6 +8,7 @@ import org.openjfx.Tracking;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.layout.FlowPane;
 
 public class ButtonHandler implements EventHandler<ActionEvent> {
 
@@ -20,20 +21,22 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 	@Override
 	public void handle(ActionEvent event) {
 		Button button = (Button) event.getSource();
+		FlowPane fp = (FlowPane) app.getScene().lookup("#mmButtons");
 		
 		switch(button.getId()) {
 			case "exit":
 				if(app.getRobot() != null){app.getRobot().disconnect();}
 				if(app.getTracking() != null){app.getTracking().disconnect();}
 				System.exit(0);
-			case "rServerConnect":
+			case "serverConnect":
 				if(app.getRobot() ==null){app.setRobot(new Robot(new Client(5005, app)));}
+				if(app.getTracking() == null){app.setTracking(new Tracking(new Client(5000, app)));}
+				if(app.getRobot() != null) fp.getChildren().remove(app.getScene().lookup("#serverConnect"));
+				break;
 			case "rbefehlseingabe":
 				app.getScene().lookup("#mmButtons").setVisible(false);
 				app.getScene().lookup("#rEingabeBox").setVisible(true);
 				break;
-			case "tServerConnect":
-				if(app.getTracking() == null){app.setTracking(new Tracking(new Client(5000, app)));}
 			case "tbefehlseingabe":
 				app.getScene().lookup("#mmButtons").setVisible(false);
 				app.getScene().lookup("#tEingabeBox").setVisible(true);
@@ -46,6 +49,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				break;
 			case "endPos":
 				app.getRobot().endPos();
+				app.getScene().lookup("#rBefehl").requestFocus();
 				break;
 			case "kaliHM":
 				 app.createCalibration(3, "");

@@ -1,15 +1,20 @@
 package org.openjfx;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Tracking {
 
     private Client client;
+    private List<String> history;
 
     /**
      * Constructor for the Tracking connection
      * @param client an which to connect to
      */
     public Tracking(Client client) {
-		this.client = client;     
+		this.client = client;
+		this.history = new ArrayList<String>();
 		connectToTracking();
     }
 
@@ -32,6 +37,7 @@ public class Tracking {
      * @param message The message send to the server
      */
     public void sendAndReceive(String message){
+    	makeHistory(message);
         client.sendAndReceive(message);
     }
 
@@ -53,6 +59,14 @@ public class Tracking {
     public String received(){
         return client.received();
     }
+    
+    private void makeHistory(String input) {
+    	this.history.add(input);
+    }
+    
+    public List<String> getHistory() {
+		return history;
+	}
 
 
 
