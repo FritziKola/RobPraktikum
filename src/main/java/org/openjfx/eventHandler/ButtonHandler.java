@@ -52,7 +52,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				app.getScene().lookup("#rBefehl").requestFocus();
 				break;
 			case "kaliHM":
-				 app.createCalibration(3, "");
+				 app.createCalibration(10, "");
 				 if (app.getCalibration() != null) {
 					 app.getScene().lookup("#mmButtons").setVisible(false);
 					 app.getScene().lookup("#kaliButtons").setVisible(true);
@@ -62,13 +62,19 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 		    	 app.getCalibration().moveRobotPTP();
 		    	 break;
 			case "kalibrierung":
-				 app.getCalibration().constructLinearEquation();
+				 app.getCalibration().solveCalibration();
 		    	 break;
+			case "mVornehmen":
+				app.getTracking().takeMeasurements(app.getCalibration());
+				break;
+			case "rAnPunktFahren":
+				app.getRobot().moveToPoint(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY());
+				break;
 			default:
 				System.out.println("Button not ready yet");
 				break;
 			case "testMenue":
-				app.createCalibration(3, "test");
+				//app.createCalibration(3, "test");
 				break; 
 			
 		}

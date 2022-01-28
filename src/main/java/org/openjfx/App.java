@@ -243,12 +243,12 @@ public class App extends Application {
     	Button kalibrierung =new Button("Kalibrierung");
     	kalibrierung.setId("kalibrierung");
     	kaliButtons.getChildren().add(kalibrierung);
-    	Button leererB1 = new Button("Leerer Buttons 1");
-    	leererB1.setId("leer1");
-    	kaliButtons.getChildren().add(leererB1);
-    	Button leererB2 =new Button("Leerer Button 2");
-    	leererB2.setId("leer2");
-    	kaliButtons.getChildren().add(leererB2);
+    	Button mVornehmen = new Button("Messung Vornehmen");
+    	mVornehmen.setId("mVornehmen");
+    	kaliButtons.getChildren().add(mVornehmen);
+    	Button rAnPunktFahren =new Button("Roboter an Punkt fahren");
+    	rAnPunktFahren.setId("rAnPunktFahren");
+    	kaliButtons.getChildren().add(rAnPunktFahren);
     	Button backToMmButton = new Button("Back to Menu");
 		backToMmButton.setId("backToMenu");
 		kaliButtons.getChildren().add(backToMmButton);
@@ -318,11 +318,11 @@ public class App extends Application {
 	 * @param test
 	 */
 	public void createCalibration(int measurements, String test){
-		if(robot != null && tracking != null){
-			calibration = new Calibration(robot,tracking, measurements);
+		if(test.equals("test")){
+			calibration = new Calibration(robot);
 		}
-		else if(test.equals("test")){
-			calibration = new Calibration();
+		else if(robot != null && tracking != null){
+			calibration = new Calibration(robot,tracking, measurements);
 		}
 		else {
 			System.out.println("No Robot or Tracking server, try again don't proceed");
