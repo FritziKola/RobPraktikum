@@ -1,6 +1,7 @@
 package org.openjfx;
 
 import externalThings.Jama.Matrix;
+import externalThings.Jama.SingularValueDecomposition;
 import javafx.scene.effect.Light;
 
 import java.util.ArrayList;
@@ -37,7 +38,12 @@ public class Robot {
      * Moves robot endefektor to point
      */
     public void moveToPoint(Matrix point, Matrix X, Matrix Y){
-        Matrix M = Y.times(point).times(X.inverse());
+        SingularValueDecomposition svd = new SingularValueDecomposition(Y.times(point).times(X.inverse()));
+        Matrix M = svd.getU().times(svd.getV().transpose());
+        System.out.println("MoveRTHomRowWise " + M.get(0,0) + " " + M.get(0 ,1) + " " + M.get(0,2) + " " + M.get(0,3)
+                + M.get(1,0) + " " + M.get(1 ,1) + " " + M.get(1,2) + " " + M.get(1,3)
+                + M.get(2,0) + " " + M.get(2 ,1) + " " + M.get(2,2) + " " + M.get(2,3));
+
     }
 
     public void setSpeed(String speed){

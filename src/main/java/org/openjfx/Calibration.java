@@ -28,7 +28,7 @@ public class Calibration {
     }
 
     /**
-     * Constructor for test calibration
+     * Constructor for test calibration, used for debuging
      */
     public Calibration(){
         measurements = 3;
@@ -81,11 +81,11 @@ public class Calibration {
         trackingMatricesN[1] = new Matrix(n2);
         trackingMatricesN[2] = new Matrix(n3);
         inverse();
-        /*
-        robotMatricesM[0] = new Matrix( new double[][] {{-0.18, 0, 0.98, 928.232},
+
+        Matrix Point= new Matrix( new double[][] {{-0.18, 0, 0.98, 928.232},
                 {0.01, 1, 0, 8.509},
                 {-0.98, 0.01, -0.18, 392.979},
-                {0, 0, 0, 1}});
+                {0, 0, 0, 1}});/*
         robotMatricesM[1] = new Matrix( new double[][] {{-0.24, -0.18, 0.95, 889.02},
                 {0.28, 0.93, 0.25, 226.827},
                 {-0.93, 0.33, -0.17, 173.287},
@@ -103,8 +103,12 @@ public class Calibration {
         QRDecomposition QR = new QRDecomposition(A);
         Matrix qr = QR.solve(b);
         qr.print(10,5);
-        getXY(qr, 1).print(10,5);
-        getXY(qr, 2).print(10, 5);
+        System.out.println("X Matrix");
+        getXY(qr, 2).print(10,5);
+        System.out.println("Y Matrix");
+        getXY(qr, 1).print(10, 5);
+        robot.moveToPoint(Point, getXY(qr, 2), getXY(qr, 1) );
+
     }
 
     /**
@@ -119,7 +123,7 @@ public class Calibration {
     }
 
     /**
-     * Returns the solution matrices, got fro the qr decomposition
+     * Returns the solution matrices, got for the qr decomposition
      * @param w Array with
      * @param whichOne choosing between the X matrix with 1 or the Y matrix with 2
      * @return Ether X or Y matrix
@@ -252,9 +256,7 @@ public class Calibration {
      * inverses robot matrices
      * TODO: Herausfinden ob das gebraucht wird oder nicht
      */
-    private void inverse(){
-        for (int i =0; i < measurements; i++){ robotMatricesM[i]=robotMatricesM[i].inverse(); }
-    }
+    private void inverse(){for (int i =0; i < measurements; i++){ robotMatricesM[i]=robotMatricesM[i].inverse(); }}
 
     /**
      * Moves the robot randomly and takes measurements while doing so
