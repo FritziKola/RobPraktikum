@@ -38,28 +38,30 @@ public class Robot {
         client.sendAndReceive("SetAdeptSpeed 5");
     }
 
+    public Matrix orthonomalize(Matrix pose){
+        SingularValueDecomposition svd = pose.svd();
+        double i = svd.getV().get(0,0);
+        System.out.print(i);
+        return null;
+    }
     /**
-     * Moves robot endefektor to point
+     * Moves robot endefektor to point N
      */
-    public void moveToPoint(Matrix point, Matrix X, Matrix Y){
-        /*Matrix yn = Y.times(point);
+    public void moveToPoint(Matrix N, Matrix X, Matrix Y){
+        Matrix YN = Y.times(N);
+        SingularValueDecomposition svdYN = new SingularValueDecomposition(YN.getMatrix(0, 2, 0, 2));
+        YN.setMatrix(0, 2, 0, 2, svdYN.getU().times(svdYN.getV().transpose()));
+        Matrix mh  = YN.times(X.inverse());
+        SingularValueDecomposition svdm = new SingularValueDecomposition(mh.getMatrix(0, 2, 0, 2));
 
-        // ortohnormaliesieren von yn
-        SingularValueDecomposition svd = new SingularValueDecomposition(yn);
-        yn = svd.getU().times(svd.getV().transpose());
-        // ortohnormalisieren von x
-        SingularValueDecomposition svd2 = new SingularValueDecomposition(X);
-        X = svd2.getU().times(svd2.getV().transpose());
-        */
-        Matrix m  = Y.times(point).times(X.inverse());
-
+        Matrix m= svdm.getU().times(svdm.getV().transpose());
         m.print(10, 5);
 
 
         sendAndReceive("EnableAlter");
-        sendAndReceive("MoveRTHomRowWise " + m.get(0,0) + " " + m.get(0 ,1) + " " + m.get(0,2) + " " + m.get(0,3)
-                + m.get(1,0) + " " + m.get(1 ,1) + " " + m.get(1,2) + " " + m.get(1,3)
-                + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + m.get(2,3));
+        sendAndReceive("MoveRTHomRowWise " + m.get(0,0) + " " + m.get(0 ,1) + " " + m.get(0,2) + " " + mh.get(0,3)
+                + m.get(1,0) + " " + m.get(1 ,1) + " " + m.get(1,2) + " " + mh.get(1,3)
+                + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + mh.get(2,3));
         sendAndReceive("DisableAlter");
 
     }
