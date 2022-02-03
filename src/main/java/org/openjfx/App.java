@@ -1,9 +1,8 @@
 package org.openjfx;
 
-import externalThings.Jama.Matrix;
-import externalThings.Jama.SingularValueDecomposition;
 import org.openjfx.eventHandler.ButtonHandler;
 import org.openjfx.eventHandler.KeyHandler;
+import org.openjfx.eventHandler.MouseHandler;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -18,6 +17,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.ColumnConstraints;
@@ -40,6 +40,7 @@ public class App extends Application {
 	private ButtonHandler bh;
 	public Client client;
 	private Calibration calibration;
+	private Long sliderValue = null;
 	
     @Override
     public void start(Stage stage) {
@@ -114,8 +115,12 @@ public class App extends Application {
 		ausgabe.setId("ausgabePan");
 		buttons.setAlignment(Pos.CENTER);
 		//TODO Funktion einfügen für z.B. Geschwindigkeit vom Roboter einbauen
-		Slider slider = new Slider(1, 20, 1);
+		Slider slider = new Slider(1, 100, 1);
 		slider.setShowTickMarks(true);
+		slider.valueProperty().addListener((observable, oldVal, newVal) -> {
+			sliderValue = Math.round((double) newVal);
+		});
+		slider.addEventHandler(MouseEvent.MOUSE_RELEASED, new MouseHandler(this));
 		buttons.getChildren().add(slider);
 		//grid.add(buttons, 1, 0, 1, 2);
 		grid.add(ausgabe, 0 ,0);
@@ -369,8 +374,17 @@ public class App extends Application {
 	public void setCalibration(Calibration calibration) {
 		this.calibration = calibration;
 	}
+	
 	public Calibration getCalibration() {
 		return calibration;
+	}
+	
+	public Long getSliderValue() {
+		return sliderValue;
+	}
+    
+    public void setSliderValue(Long sliderValue) {
+		this.sliderValue = sliderValue;
 	}
 
 

@@ -60,7 +60,7 @@ public class Robot {
 
     }
 
-    public void setSpeed(String speed){
+    public void setSpeed(Long speed){
         client.sendAndReceive("SetAdeptSpeed " + speed);
     }
 

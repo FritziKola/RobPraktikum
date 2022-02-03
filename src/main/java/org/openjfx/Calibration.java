@@ -297,7 +297,7 @@ public class Calibration {
     private void gatherDate(){
         robotMatricesM = new Matrix[measurements];
         trackingMatricesN =  new Matrix[measurements];
-        robot.setSpeed("40");
+        robot.setSpeed(40L);
         for(int i = 0 ;i < measurements; i++){
             moveRobotPTP();
             robot.send("GetPositionHomRowWise");
@@ -306,7 +306,7 @@ public class Calibration {
             tracking.send("CM_NEXTVALUE");
             trackingMatricesN[i] = parser(tracking.received());
         }
-        robot.setSpeed("5");
+        robot.setSpeed(5L);
         /* debug Kommentare */
         /*
         System.out.println("Matrizen des Roboters: ");
