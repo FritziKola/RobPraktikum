@@ -1,5 +1,7 @@
 package org.openjfx;
 
+import externalThings.Jama.Matrix;
+import externalThings.Jama.SingularValueDecomposition;
 import org.openjfx.eventHandler.ButtonHandler;
 import org.openjfx.eventHandler.KeyHandler;
 
@@ -61,7 +63,13 @@ public class App extends Application {
         
         stage.show();
 
-        
+		// Testmatrix
+		/*double[][] t = {{1, 2, 3, 1},
+				{4, 5, 6, 2},
+				{7, 8, 9, 3},
+				{0, 0 ,0 , 1}};
+		Matrix test = new Matrix(t);
+		invertHM(test);*/
         // Testdaten Marker (Splicer):
         // Splicer.returnMatrix("1639716756.780680 y 0.05546889 0.04634489 0.99738426 -234.14794922 -0.07443932 0.99633410 -0.04215620 -186.64950562 -0.99568167 -0.07190625 0.05871543 -1985.50878906 0.147736");
     }

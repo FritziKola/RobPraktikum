@@ -38,12 +38,6 @@ public class Robot {
         client.sendAndReceive("SetAdeptSpeed 5");
     }
 
-    public Matrix orthonomalize(Matrix pose){
-        SingularValueDecomposition svd = pose.svd();
-        double i = svd.getV().get(0,0);
-        System.out.print(i);
-        return null;
-    }
     /**
      * Moves robot endefektor to point N
      */

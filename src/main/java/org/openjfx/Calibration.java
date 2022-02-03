@@ -252,7 +252,38 @@ public class Calibration {
         return RM;
     }
 
+    /**
+     * inverts homogeneous matrix
+     * @return inverted matrix
+     */
+    private Matrix invertHM(Matrix hm){
+        Matrix hminverted = new Matrix(4,4);
 
+        //rotational part:
+        Matrix rotPart = new Matrix(3,3);
+        Matrix rotPartinverted = new Matrix(3,3);
+        rotPart = hm.getMatrix(0,2,0,2);
+        for(int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                rotPartinverted.set(i, j, rotPart.get(j, i));
+            }
+        }
+        hminverted.setMatrix(0, 2, 0, 2, rotPartinverted.getMatrix(0, 2, 0, 2));
+
+        //translational part:
+        double[][] transPart = {{0}, {0}, {0}, {1}};
+        double k;
+        for(int i = 0; i < 3; i++) {
+            k = 0;
+            for (int j = 0; j < 3; j++) {
+                k = k + (rotPartinverted.get( i, j) * hm.get(j,3));
+                System.out.println(k);
+            }
+            transPart[i][0] = -k;
+        }
+        hminverted.setMatrix(0,3, 3,3, new Matrix(transPart));
+        return hminverted;
+    }
     /**
      * inverses robot matrices
      * TODO: Herausfinden ob das gebraucht wird oder nicht
