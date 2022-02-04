@@ -332,7 +332,7 @@ public class App extends Application {
 	 */
 	public void createCalibration(int measurements, String test){
 		if(test.equals("test")){
-			calibration = new Calibration(robot);
+			calibration = new Calibration();
 		}
 		else if(robot != null && tracking != null){
 			calibration = new Calibration(robot,tracking, measurements);

@@ -14,7 +14,8 @@ import java.util.List;
 public class Robot {
 
     private Client client;
-
+    private Matrix rotation = Matrix.identity(4,4);
+    private Matrix hMPosition;
     private List<String> history;
 
     /**
@@ -45,19 +46,21 @@ public class Robot {
         Matrix YN = Y.times(N);
         SingularValueDecomposition svdYN = new SingularValueDecomposition(YN.getMatrix(0, 2, 0, 2));
         YN.setMatrix(0, 2, 0, 2, svdYN.getU().times(svdYN.getV().transpose()));
-        Matrix mh  = YN.times(X.inverse());
-        SingularValueDecomposition svdm = new SingularValueDecomposition(mh.getMatrix(0, 2, 0, 2));
+        hMPosition  = YN.times(X.inverse());
+        SingularValueDecomposition svdm = new SingularValueDecomposition(hMPosition.getMatrix(0, 2, 0, 2));
 
         Matrix m= svdm.getU().times(svdm.getV().transpose());
-        m.print(10, 5);
-
-
+        hMPosition.setMatrix(0,2,0,2, m);
         sendAndReceive("EnableAlter");
-        sendAndReceive("MoveRTHomRowWise " + m.get(0,0) + " " + m.get(0 ,1) + " " + m.get(0,2) + " " + mh.get(0,3)
-                + m.get(1,0) + " " + m.get(1 ,1) + " " + m.get(1,2) + " " + mh.get(1,3)
-                + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + mh.get(2,3));
+        sendHomMatrix(hMPosition);
         sendAndReceive("DisableAlter");
 
+    }
+
+    private void sendHomMatrix(Matrix m){
+        sendAndReceive("MoveRTHomRowWise " + m.get(0,0) + " " + m.get(0 ,1) + " " + m.get(0,2) + " " + m.get(0,3)
+                + m.get(1,0) + " " + m.get(1 ,1) + " " + m.get(1,2) + " " + m.get(1,3)
+                + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + m.get(2,3));
     }
 
     public void setSpeed(Long speed){
@@ -97,6 +100,7 @@ public class Robot {
 
     /**
      * Brings the robot in end position
+     * TODO: funktionsfähig im alter und nicht
      */
     public void endPos() {
         sendAndReceive("MovePTPJoints 0 -150 150 0 0 0");
@@ -108,5 +112,28 @@ public class Robot {
 
     public List<String> getHistory() {
         return history;
+    }
+
+    /**
+     * als kruze funktion zum testen der rotations teile
+     * TODO: schöner machen oder raus nehmen
+     */
+    public void messageDecoder(String massage){
+        if(massage.contains("Rotation")) {
+            sendAndReceive("EnableAlter");
+            String[] rowWise = massage.split(" ");
+            int i = 1;
+            for(int j= 0; j <3; j++ ){
+                for(int l =0; l<3; l++){
+                    rotation.set(j, l, Double.parseDouble(rowWise[i]));
+                    i ++;
+                }
+            }
+            rotation.print(10 , 5);
+            sendHomMatrix(rotation.times(hMPosition));
+            sendAndReceive("DisableAlter");
+        }
+        else{ sendAndReceive(massage);}
+
     }
 }

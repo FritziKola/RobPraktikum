@@ -30,8 +30,8 @@ public class Calibration {
     /**
      * Constructor for test calibration, used for debuging
      */
-    public Calibration(Robot robot){
-        this.robot= robot;
+    public Calibration(){
+        /*
         measurements = 3;
         robotMatricesM = new Matrix[measurements];
         trackingMatricesN = new Matrix[measurements];/*
@@ -41,7 +41,7 @@ public class Calibration {
         robotMatricesM[0] = parser("-0.00016    -0.00003    -1.00000   243.88756 -0.00021    -1.00000     0.00003    -0.00643 -1.00000     0.00021 0.00016 607.41571");
         robotMatricesM[1] = parser("-0.76604    -0.00000    -0.64279   392.31442 0.00000    -1.00000     0.00000    -0.00000 -0.64279    -0.00000    z0.76604 380.77405");
         robotMatricesM[2] = parser("0.00000    -0.00000    -1.00000   925.00000 0.00000    -1.00000     0.00000    -0.00000 -1.00000    -0.00000    -0.00000 425.00000");
-        invers();*/
+        invers();
         double[][] m1 = {{-0.00016, -0.00003, -1.00000, 243.88756},
                 {-0.00021, -1.00000, 0.00003,-0.00643},
                 {-1.00000, 0.00021, 0.00016, 607.41571},
@@ -87,7 +87,7 @@ public class Calibration {
                 {0.01, 1, 0, 8.509},
                 {-0.98, 0.01, -0.18, 392.979},
                 {0, 0, 0, 1}});
-        /*
+
         robotMatricesM[1] = new Matrix( new double[][] {{-0.24, -0.18, 0.95, 889.02},
                 {0.28, 0.93, 0.25, 226.827},
                 {-0.93, 0.33, -0.17, 173.287},
@@ -99,7 +99,7 @@ public class Calibration {
         trackingMatricesN[1] = new Matrix(new double[][]{{-0.12, -0.23, -0.97, 173.64},
                 {-0.32, -0.91, 0.26, 53.77},
                 {-0.94, 0.34, 0.03, -1320.49},
-                {0, 0, 0, 1}});*/
+                {0, 0, 0, 1}});
         Matrix b = createB();
         Matrix A = createA();
         QRDecomposition QR = new QRDecomposition(A);
@@ -112,7 +112,7 @@ public class Calibration {
         System.out.println("Y Matrix");
         Y.print(10,5);
         Point.print(10,5);
-        robot.moveToPoint(Point, X, Y );
+        robot.moveToPoint(Point, X, Y );*/
 
     }
 
@@ -120,8 +120,8 @@ public class Calibration {
      * Solves calibration and sets X and Y
      */
     public void solveCalibration(){
-        gatherDate();
-        inverse();
+        doAllMeasurments();
+        invertHM();
         QRDecomposition QR = new QRDecomposition(createA());
         Matrix qr = QR.solve(createB());
         X = getXY(qr, 2);
@@ -256,45 +256,35 @@ public class Calibration {
      * inverts homogeneous matrix
      * @return inverted matrix
      */
-    private Matrix invertHM(Matrix hm){
-        Matrix hminverted = new Matrix(4,4);
+    public void invertHM(){
+        for(int n = 0; n <measurements; n++) {
+            Matrix hm = robotMatricesM[n];
+            Matrix hminverted = new Matrix(4, 4);
 
-        //rotational part:
-        Matrix rotPart = new Matrix(3,3);
-        Matrix rotPartinverted = new Matrix(3,3);
-        rotPart = hm.getMatrix(0,2,0,2);
-        for(int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                rotPartinverted.set(i, j, rotPart.get(j, i));
-            }
-        }
-        hminverted.setMatrix(0, 2, 0, 2, rotPartinverted.getMatrix(0, 2, 0, 2));
+            //rotational part:
+            Matrix rotPartinverted = hm.getMatrix(0, 2, 0, 2).transpose();
+            hminverted.setMatrix(0, 2, 0, 2, rotPartinverted);
 
-        //translational part:
-        double[][] transPart = {{0}, {0}, {0}, {1}};
-        double k;
-        for(int i = 0; i < 3; i++) {
-            k = 0;
-            for (int j = 0; j < 3; j++) {
-                k = k + (rotPartinverted.get( i, j) * hm.get(j,3));
-                System.out.println(k);
+            //translational part:
+            double[][] transPart = {{0}, {0}, {0}, {1}};
+            double k;
+            for (int i = 0; i < 3; i++) {
+                k = 0;
+                for (int j = 0; j < 3; j++) {
+                    k = k + (rotPartinverted.get(i, j) * hm.get(j, 3));
+                }
+                transPart[i][0] = -k;
             }
-            transPart[i][0] = -k;
+            hminverted.setMatrix(0, 3, 3, 3, new Matrix(transPart));
+            robotMatricesM[n] = hminverted;
         }
-        hminverted.setMatrix(0,3, 3,3, new Matrix(transPart));
-        return hminverted;
+
     }
-    /**
-     * inverses robot matrices
-     * TODO: Herausfinden ob das gebraucht wird oder nicht
-     */
-    private void inverse(){for (int i =0; i < measurements; i++){ robotMatricesM[i]=robotMatricesM[i].inverse(); }}
 
     /**
      * Moves the robot randomly and takes measurements while doing so
-     * TODO: Problem lösen, wenn der marker nicht erkannt wird
      */
-    private void gatherDate(){
+    private void doAllMeasurments(){
         robotMatricesM = new Matrix[measurements];
         trackingMatricesN =  new Matrix[measurements];
         robot.setSpeed(40L);
@@ -302,23 +292,12 @@ public class Calibration {
             moveRobotPTP();
             robot.send("GetPositionHomRowWise");
             robotMatricesM[i] = parser(robot.received());
-
             tracking.send("CM_NEXTVALUE");
             trackingMatricesN[i] = parser(tracking.received());
         }
         robot.setSpeed(5L);
-        /* debug Kommentare */
-        /*
-        System.out.println("Matrizen des Roboters: ");
-        for(Matrix m :robotMatricesM){
-            m.print(10, 5);
-        }
-        System.out.println("Matrizen des Trackingsystems: ");
-        for(Matrix m : trackingMatricesN){
-            m.print(10,5);
-        }
-         */
     }
+
 
     /**
      * Moves the Robot randomly for the purpose of getting data
@@ -328,15 +307,15 @@ public class Calibration {
         int[] joints = new int[]  {0,-150, 150, 0, 0, 0};
         for(int i = 0; i <= 4; i++){
             if (new Random().nextInt(2) == 1){ joints[i] += new Random().nextInt(35)*(-1); }
-            else{ joints[i] += new Random().nextInt(35); }
+            else{ joints[i] += new Random().nextInt(30); }
         }
         joints[4] = 0; joints[5] = 0;
         String robotCom = Arrays.toString(joints).replaceAll("\\[|]|,", "");
         System.out.println(robotCom);
         robot.send("MovePTPJoints " + robotCom);
-        if(robot.received().equals("false")){
-            moveRobotPTP();
-        }
+        if(robot.received().equals("false")){moveRobotPTP();}
+        tracking.send("CM_NEXTVALUE");
+        if(tracking.received().contains("n")){moveRobotPTP();}
     }
 
     /**
@@ -355,7 +334,8 @@ public class Calibration {
                     i ++;
                 }
             }
-        } else if(!input.contains("n")) {
+        }
+        else if(!input.contains("n")) {
             int i = 0;
             for(int j= 0; j <3; j++ ){
                 for(int l =0; l<4; l++){

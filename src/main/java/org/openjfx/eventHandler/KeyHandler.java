@@ -25,7 +25,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			
 			if(event.getCode() == KeyCode.ENTER) {
 				if(isRobot) {
-					app.getRobot().sendAndReceive(text.getText());
+					app.getRobot().messageDecoder(text.getText());
 					text.setText("");
 				}
 				else if(isTracking) {

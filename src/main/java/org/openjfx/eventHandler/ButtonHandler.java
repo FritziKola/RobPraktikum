@@ -1,5 +1,6 @@
 package org.openjfx.eventHandler;
 
+import externalThings.Jama.Matrix;
 import org.openjfx.App;
 import org.openjfx.Client;
 import org.openjfx.Robot;
@@ -52,11 +53,12 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				app.getScene().lookup("#rBefehl").requestFocus();
 				break;
 			case "kaliHM":
-				 app.createCalibration(10, "");
+
+
 				 if (app.getCalibration() != null) {
 					 app.getScene().lookup("#mmButtons").setVisible(false);
 					 app.getScene().lookup("#kaliButtons").setVisible(true);
-				 }
+				 }else {app.createCalibration(12, "");}
 				break;
 			case "moveRobot":
 		    	 app.getCalibration().moveRobotPTP();
@@ -74,10 +76,21 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				System.out.println("Button not ready yet");
 				break;
 			case "testMenue":
-				//app.createCalibration(3, "test");
 				break; 
 			
 		}
 	}
+
+	/*
+
+	TODO: 	(	1. Roboter an den punkt fahren button auch beim robot menue
+				2.  textfeld in eingabe sollte nich immer nach oben springen bei robot und tracking
+				3. messungvronehmen auch in tracking
+				4. Kalibriegungs button zu Kalibrieungs menue ändern
+				5. haupt kalibrierung auch im hauptmenu
+				6. move robot als Roboter zufällig bewegen im roboter )
+		Oder:
+		Du kannst die punkte machen  oder ganz anders: Alle Button im hauptmenue und rechts roboter textfeld und links tracking textfeld
+	 */
 
 }
