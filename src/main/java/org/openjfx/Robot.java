@@ -130,7 +130,7 @@ public class Robot {
                 }
             }
             rotation.print(10 , 5);
-            sendHomMatrix(rotation.times(hMPosition));
+            sendHomMatrix(hMPosition.times(rotation));
             sendAndReceive("DisableAlter");
         }
         else{ sendAndReceive(massage);}

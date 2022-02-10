@@ -16,3 +16,5 @@ tracker3:
 Values Becher: MovePTPJoints 2 -45 125 0 6 0
 Ansaugen Signal: DirectAdeptCmd signal 5, -6
 Ansaugestop Signal: DirectAdeptCmd signal -5, 6
+
+Rotation 0 0 -1 0 1 0 1 0 0

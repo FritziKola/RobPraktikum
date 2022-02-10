@@ -120,6 +120,7 @@ public class Calibration {
      * Solves calibration and sets X and Y
      */
     public void solveCalibration(){
+
         doAllMeasurments();
         invertHM();
         QRDecomposition QR = new QRDecomposition(createA());
@@ -284,16 +285,19 @@ public class Calibration {
     /**
      * Moves the robot randomly and takes measurements while doing so
      */
-    private void doAllMeasurments(){
+    private void doAllMeasurments() {
         robotMatricesM = new Matrix[measurements];
         trackingMatricesN =  new Matrix[measurements];
         robot.setSpeed(40L);
         for(int i = 0 ;i < measurements; i++){
             moveRobotPTP();
+            tracking.send("CM_NEXTVALUE");
+            if(tracking.received().contains("n")){moveRobotPTP();}
             robot.send("GetPositionHomRowWise");
             robotMatricesM[i] = parser(robot.received());
             tracking.send("CM_NEXTVALUE");
             trackingMatricesN[i] = parser(tracking.received());
+
         }
         robot.setSpeed(5L);
     }
@@ -303,7 +307,7 @@ public class Calibration {
      * Moves the Robot randomly for the purpose of getting data
      * Only works in PTP-mode (not real time)
      */
-    public void moveRobotPTP(){
+    public void moveRobotPTP() {
         int[] joints = new int[]  {0,-150, 150, 0, 0, 0};
         for(int i = 0; i <= 4; i++){
             if (new Random().nextInt(2) == 1){ joints[i] += new Random().nextInt(35)*(-1); }
@@ -312,10 +316,14 @@ public class Calibration {
         joints[4] = 0; joints[5] = 0;
         String robotCom = Arrays.toString(joints).replaceAll("\\[|]|,", "");
         System.out.println(robotCom);
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e){
+            System.out.println("Fehler sleep");
+        }
         robot.send("MovePTPJoints " + robotCom);
         if(robot.received().equals("false")){moveRobotPTP();}
-        tracking.send("CM_NEXTVALUE");
-        if(tracking.received().contains("n")){moveRobotPTP();}
+
     }
 
     /**
