@@ -1,6 +1,5 @@
 package org.openjfx.eventHandler;
 
-import externalThings.Jama.Matrix;
 import org.openjfx.App;
 import org.openjfx.Client;
 import org.openjfx.Robot;
@@ -10,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 
 public class ButtonHandler implements EventHandler<ActionEvent> {
 
@@ -22,7 +22,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 	@Override
 	public void handle(ActionEvent event) {
 		Button button = (Button) event.getSource();
-		FlowPane fp = (FlowPane) app.getScene().lookup("#mmButtons");
+		GridPane gp = (GridPane) app.getScene().lookup("#menuGrid");
 		
 		switch(button.getId()) {
 			case "exit":
@@ -32,34 +32,34 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 			case "serverConnect":
 				if(app.getRobot() ==null){app.setRobot(new Robot(new Client(5005, app)));}
 				if(app.getTracking() == null){app.setTracking(new Tracking(new Client(5000, app)));}
-				if(app.getRobot() != null) fp.getChildren().remove(app.getScene().lookup("#serverConnect"));
+				if(app.getRobot() != null) gp.getChildren().remove(app.getScene().lookup("#serverConnect"));
 				break;
-			case "rbefehlseingabe":
-				app.getScene().lookup("#mmButtons").setVisible(false);
-				app.getScene().lookup("#rEingabeBox").setVisible(true);
-				break;
-			case "tbefehlseingabe":
-				app.getScene().lookup("#mmButtons").setVisible(false);
-				app.getScene().lookup("#tEingabeBox").setVisible(true);
-				break;
-			case "backToMenu":
-				app.getScene().lookup("#mmButtons").setVisible(true);
-				app.getScene().lookup("#rEingabeBox").setVisible(false);
-				app.getScene().lookup("#tEingabeBox").setVisible(false);
-				app.getScene().lookup("#kaliButtons").setVisible(false);
-				break;
+//			case "rbefehlseingabe":
+//				app.getScene().lookup("#mmButtons").setVisible(false);
+//				app.getScene().lookup("#rEingabeBox").setVisible(true);
+//				break;
+//			case "tbefehlseingabe":
+//				app.getScene().lookup("#mmButtons").setVisible(false);
+//				app.getScene().lookup("#tEingabeBox").setVisible(true);
+//				break;
+//			case "backToMenu":
+//				app.getScene().lookup("#mmButtons").setVisible(true);
+//				app.getScene().lookup("#rEingabeBox").setVisible(false);
+//				app.getScene().lookup("#tEingabeBox").setVisible(false);
+//				app.getScene().lookup("#kaliButtons").setVisible(false);
+//				break;
 			case "endPos":
 				app.getRobot().endPos();
 				app.getScene().lookup("#rBefehl").requestFocus();
 				break;
-			case "kaliHM":
-
-
-				 if (app.getCalibration() != null) {
-					 app.getScene().lookup("#mmButtons").setVisible(false);
-					 app.getScene().lookup("#kaliButtons").setVisible(true);
-				 }else {app.createCalibration(12, "");}
-				break;
+//			case "kaliHM":
+//
+//
+//				 if (app.getCalibration() != null) {
+//					 app.getScene().lookup("#mmButtons").setVisible(false);
+//					 app.getScene().lookup("#kaliButtons").setVisible(true);
+//				 }else {app.createCalibration(12, "");}
+//				break;
 			case "moveRobot":
 		    	 app.getCalibration().moveRobotPTP();
 		    	 break;
@@ -69,7 +69,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 			case "mVornehmen":
 				app.getTracking().takeMeasurements(app.getCalibration());
 				break;
-			case "rAnPunktFahren":
+			case "anPunktFahren":
 				app.getRobot().moveToPoint(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY());
 				break;
 			default:
