@@ -105,13 +105,22 @@ public class Gui {
 		rLabel.setAlignment(Pos.CENTER);
 		grid.add(rLabel, 0, 0);
 		//Button Bereich
-		FlowPane robotButtons = new FlowPane(Orientation.VERTICAL, 10, 20);
+		FlowPane robotButtons = new FlowPane(Orientation.HORIZONTAL, 10, 20);
 		Button endPos = new Button("EndPosition");
 		endPos.setId("endPos");
 		robotButtons.getChildren().add(endPos);
 		Button greifKlotz = new Button("Greife Bauklotz");
 		greifKlotz.setId("greifKlotz");
 		robotButtons.getChildren().add(greifKlotz);
+		Button ansaugen = new Button("Ansaugen");
+		ansaugen.setId("ansaugen");
+		robotButtons.getChildren().add(ansaugen);
+		Button loslassen = new Button("loslassen");
+		loslassen.setId("loslassen");
+		robotButtons.getChildren().add(loslassen);
+		Button becherPos = new Button("an BecherPosition fahren");
+		becherPos.setId("becherPos");
+		robotButtons.getChildren().add(becherPos);
 		robotButtons.setAlignment(Pos.CENTER);
 		grid.add(robotButtons, 0, 1);
 		for(Node node : robotButtons.getChildren()) {
@@ -155,7 +164,7 @@ public class Gui {
 		tLabel.setAlignment(Pos.CENTER);
 		grid.add(tLabel, 1, 0);
 		//Button Bereich
-		FlowPane trackingButtons = new FlowPane(Orientation.VERTICAL, 10, 20);
+		FlowPane trackingButtons = new FlowPane(Orientation.HORIZONTAL, 10, 20);
 		Button moveRobot = new Button("Move Robot");
 		moveRobot.setId("moveRobot");
 		trackingButtons.getChildren().add(moveRobot);

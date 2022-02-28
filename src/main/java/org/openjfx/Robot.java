@@ -105,6 +105,18 @@ public class Robot {
     public void endPos() {
         sendAndReceive("MovePTPJoints 0 -150 150 0 0 0");
     }
+    
+    public void ansaugen() {
+    	sendAndReceive("DirectAdeptCmd signal 5, -6");
+    }
+    
+    public void loslassen() {
+    	sendAndReceive("DirectAdeptCmd signal -5, 6");
+    }
+    
+    public void becherPos() {
+    	sendAndReceive("MovePTPJoints 2 -45 125 0 6 0");
+    }
 
     private void makeHistory(String input) {
         this.history.add(input);
