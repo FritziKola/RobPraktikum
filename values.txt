@@ -16,5 +16,24 @@ tracker3:
 Values Becher: MovePTPJoints 2 -45 125 0 6 0
 Ansaugen Signal: DirectAdeptCmd signal 5, -6
 Ansaugestop Signal: DirectAdeptCmd signal -5, 6
-
+unterarm senkrecht gedreht über becher1: MovePTPJoints 2 -50 139 90 0 0
+unterarm senkrecht gedreht über becher2:MovePTPJoints 12 -50 139 90 0 0
 Rotation 0 0 -1 0 1 0 1 0 0
+
+Messung 1. becher         -0.00442     0.01690     0.99985    76.20638
+                          -0.21327     0.97684    -0.01745   169.71300
+                          -0.97698    -0.21331    -0.00071 -1769.25537
+                           0.00000     0.00000     0.00000     1.00000
+
+Messung 2. Becher
+     0.00219     0.02642     0.99965    74.78559
+    -0.04274     0.99874    -0.02631    87.00539
+    -0.99908    -0.04267     0.00332 -1756.71399
+     0.00000     0.00000     0.00000     1.00000
+
+
+Messung für MovePTPJoints 2 -70 139 90 0 0: (höher als Becher 1)
+     0.32911     0.08367     0.94058   -64.56953
+    -0.20509     0.97862    -0.01529   175.47473
+    -0.92175    -0.18787     0.33924 -1753.45874
+     0.00000     0.00000     0.00000     1.00000

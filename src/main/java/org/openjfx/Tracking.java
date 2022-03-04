@@ -9,7 +9,7 @@ public class Tracking {
 
     private Client client;
     private List<String> history;
-    private Matrix measurement;
+    public Matrix measurement;
 
     /**
      * Constructor for the Tracking connection

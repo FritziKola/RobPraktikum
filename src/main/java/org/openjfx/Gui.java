@@ -175,7 +175,7 @@ public class Gui {
 		mVornehmen.setId("mVornehmen");
 		trackingButtons.getChildren().add(mVornehmen);
 		Button anPunktFahren = new Button("Roboter an Punkt fahren");
-		anPunktFahren.setId("anPunktfahren");
+		anPunktFahren.setId("anPunktFahren");
 		trackingButtons.getChildren().add(anPunktFahren);
 		trackingButtons.setAlignment(Pos.CENTER);
 		grid.add(trackingButtons, 1, 1);

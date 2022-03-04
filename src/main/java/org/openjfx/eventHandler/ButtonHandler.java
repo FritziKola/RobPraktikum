@@ -30,7 +30,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				if(app.getTracking() != null){app.getTracking().disconnect();}
 				System.exit(0);
 			case "serverConnect":
-				if(app.getRobot() ==null){app.setRobot(new Robot(new Client(5005, app)));}
+				if(app.getRobot() ==null){app.setRobot(new Robot(new Client(5005, app),app));}
 				if(app.getTracking() == null){app.setTracking(new Tracking(new Client(5000, app)));}
 				if(app.getRobot() != null) gp.getChildren().remove(app.getScene().lookup("#serverConnect"));
 				break;
@@ -76,6 +76,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 		    	 app.getCalibration().moveRobotPTP();
 		    	 break;
 			case "kalibrierung":
+				 app.createCalibration(12, "");
 				 app.getCalibration().solveCalibration();
 		    	 break;
 			case "mVornehmen":
