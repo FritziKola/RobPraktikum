@@ -14,7 +14,9 @@ import java.util.List;
 public class Robot {
 
     private Client client;
-    private Matrix rotation = Matrix.identity(4,4);
+    private double[][] r = {{0, 0, -1, 0},
+            {0, 1, 0 ,0 }, {1, 0 , 0 , 0 }, {0, 0, 0, 0, 1 }};
+    private Matrix rotation = new Matrix( r );
     private Matrix hMPosition;
     private List<String> history;
 
@@ -132,7 +134,7 @@ public class Robot {
      */
     public void messageDecoder(String massage){
         if(massage.contains("Rotation")) {
-            sendAndReceive("EnableAlter");
+            sendAndReceive("EnableAlter"); // vielleicht nicht nötig
             String[] rowWise = massage.split(" ");
             int i = 1;
             for(int j= 0; j <3; j++ ){
@@ -142,7 +144,25 @@ public class Robot {
                 }
             }
             rotation.print(10 , 5);
-            sendHomMatrix(rotation.times(hMPosition));
+            sendHomMatrix(rotation.times(hMPosition)); // bewegt sich abhänig vom punkt gemessen bei "Messung vornehmen"
+            // sendHomMatrix(hMPosition.times(rotation));
+            sendAndReceive("DisableAlter");
+        } else if(massage.contains("xPlus")){
+            String[] rowWise = massage.split(" ");
+            rotation.set(4, 1,  rotation.get(4,1) + Double.parseDouble(rowWise[1]));
+        }
+        else if(massage.contains("yPlus")){
+            String[] rowWise = massage.split(" ");
+            rotation.set(4, 2,  rotation.get(4,2) + Double.parseDouble(rowWise[1]));
+        }
+        else if(massage.contains("zPlus")){
+            String[] rowWise = massage.split(" ");
+            rotation.set(4, 3,  rotation.get(4,3) + Double.parseDouble(rowWise[1]));
+        }
+        else if(massage.contains("bewegen")){
+            sendAndReceive("EnableAlter");
+            sendHomMatrix(rotation.times(hMPosition)); // bewegt sich abhänig vom punkt gemessen bei "Messung vornehmen"
+            // sendHomMatrix(hMPosition.times(rotation));
             sendAndReceive("DisableAlter");
         }
         else{ sendAndReceive(massage);}
