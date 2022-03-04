@@ -1,32 +1,8 @@
 package org.openjfx;
 
-import org.openjfx.eventHandler.ButtonHandler;
-import org.openjfx.eventHandler.KeyHandler;
-import org.openjfx.eventHandler.MouseHandler;
-
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -37,33 +13,20 @@ public class App extends Application {
 	private Robot robot;
 	private Tracking tracking;
 	private Scene scene;
-	private ButtonHandler bh;
 	public Client client;
 	private Calibration calibration;
-	private Long sliderValue = null;
+	//private Long sliderValue = null;
+	private Gui gui;
 	
     @Override
     public void start(Stage stage) {
-        scene = new Scene(new StackPane(), 900, 600);
-        scene.getStylesheets().add(getClass().getResource("css/style.css").toExternalForm());
-        stage.setResizable(false);
-        stage.setScene(scene);
-        
-        bh = new ButtonHandler(this);
-        
-        
-        initMainMenu();
-        
-        initRobotInput();
-        
-        initHMKalibrierung();
-        
-        initTrackingInput();
-        
-        //initTestInput();
-        
-        stage.show();
-
+       
+		scene = new Scene(new StackPane(), 1200, 900);
+		scene.getStylesheets().add(getClass().getResource("css/style.css").toExternalForm());
+		stage.setResizable(false);
+		stage.setScene(scene); 
+		gui = new Gui(this); 
+		stage.show();
 		// Testmatrix
 		/*double[][] t = {{1, 2, 3, 1},
 				{4, 5, 6, 2},
@@ -75,7 +38,7 @@ public class App extends Application {
         // Splicer.returnMatrix("1639716756.780680 y 0.05546889 0.04634489 0.99738426 -234.14794922 -0.07443932 0.99633410 -0.04215620 -186.64950562 -0.99568167 -0.07190625 0.05871543 -1985.50878906 0.147736");
     }
    
-    private void initRobotInput() {
+    /*private void initRobotInput() {
     	StackPane root = (StackPane) scene.getRoot();
     	Label eingabe = new Label("Eingabe:");
 		TextField befehl = new TextField();
@@ -246,7 +209,7 @@ public class App extends Application {
     	
     } */
     
-    private void initHMKalibrierung() {
+   /* private void initHMKalibrierung() {
     	StackPane root = (StackPane) scene.getRoot();
     	FlowPane kaliButtons = new FlowPane(Orientation.VERTICAL, 20, 40);
     	kaliButtons.setId("kaliButtons");
@@ -323,7 +286,7 @@ public class App extends Application {
         	}
         }
 	}
-
+*/
 
 	/**
 	 * TODO: schöner machen!
@@ -379,7 +342,7 @@ public class App extends Application {
 		return calibration;
 	}
 	
-	public Long getSliderValue() {
+	/*public Long getSliderValue() {
 		return sliderValue;
 	}
     
@@ -387,5 +350,5 @@ public class App extends Application {
 		this.sliderValue = sliderValue;
 	}
 
-
+	 */
 }
