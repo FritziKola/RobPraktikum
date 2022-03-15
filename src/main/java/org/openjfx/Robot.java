@@ -20,6 +20,8 @@ public class Robot {
     private Matrix hMPosition;
     private List<String> history;
     private App app;
+    private List<String> koordinatenAblage; //kann man  Roboterkoordinaten nehmen
+    private List<Matrix> koordinatenAufnahme; //über Marker, muss Offset zum Marker noch berechnen
 
     /**
      * Constructor for Robot
@@ -171,5 +173,24 @@ public class Robot {
         }
         else{ sendAndReceive(massage);}
 
+    }
+    
+    public void stackLoop(){
+    	koordinatenAblage = new ArrayList<String>();
+    	koordinatenAufnahme = new ArrayList<Matrix>();
+    	int n = 3;
+    	for(int i = 0; i < n; i++) {
+    		if(koordinatenAufnahme.size() <= i)
+    			break;
+    		Matrix target = koordinatenAufnahme.get(i);
+    		
+    		moveToPoint(target /* + Offset*/ ,app.getCalibration().getX(), app.getCalibration().getY());
+    		ansaugen();
+    		//potentiell hochfahren
+    		send("MovePTPJoints " + koordinatenAblage.get(i));
+    		loslassen();
+    		
+    	}
+    	
     }
 }

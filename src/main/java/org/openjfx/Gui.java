@@ -121,6 +121,10 @@ public class Gui {
 		Button becherPos = new Button("an BecherPosition fahren");
 		becherPos.setId("becherPos");
 		robotButtons.getChildren().add(becherPos);
+		Button stackLoopButton = new Button("StackLoop");
+		stackLoopButton.setId("stackLoop");
+		robotButtons.getChildren().add(stackLoopButton);
+		
 		robotButtons.setAlignment(Pos.CENTER);
 		grid.add(robotButtons, 0, 1);
 		for(Node node : robotButtons.getChildren()) {

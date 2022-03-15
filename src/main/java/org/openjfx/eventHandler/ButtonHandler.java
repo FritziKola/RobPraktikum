@@ -64,6 +64,8 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				app.getRobot().becherPos();
 				app.getScene().lookup("#rBefehl").requestFocus();
 				break;
+			case "stackLoop":
+				app.getRobot().stackLoop();
 //			case "kaliHM":
 //
 //
