@@ -139,31 +139,30 @@ public class Robot {
     public void messageDecoder(String massage){
         if(massage.contains("Rotation")) {
             sendAndReceive("EnableAlter"); // vielleicht nicht nötig
-            //String[] rowWise = massage.split(" ");
-            //int i = 1;
-            /**for(int j= 0; j <3; j++ ){
+            /*String[] rowWise = massage.split(" ");
+            int i = 1;
+            for(int j= 0; j <3; j++ ){
                 for(int l =0; l<3; l++){
                     rotation.set(j, l, Double.parseDouble(rowWise[i]));
                     i ++;
                 }
-            }
-             **/
+            }*/
+
             rotation.print(10 , 5);
-            hMPosition = app.getTracking().getMeasurement();
-            //sendHomMatrix(rotation.times(hMPosition)); // bewegt sich abhänig vom punkt gemessen bei "Messung vornehmen"
+            hMPosition.print(10, 5);
             sendHomMatrix(hMPosition.times(rotation));
             sendAndReceive("DisableAlter");
-        } else if(massage.contains("xPlus")){
+        } else if(massage.contains("xPlus")){ // nach oben
             String[] rowWise = massage.split(" ");
-            rotation.set(4, 1,  rotation.get(4,1) + Double.parseDouble(rowWise[1]));
+            rotation.set(0, 3,  rotation.get(0,3) + Double.parseDouble(rowWise[1]));
         }
-        else if(massage.contains("yPlus")){
+        else if(massage.contains("yPlus")){ // zur Seite
             String[] rowWise = massage.split(" ");
-            rotation.set(4, 2,  rotation.get(4,2) + Double.parseDouble(rowWise[1]));
+            rotation.set(1, 3,  rotation.get(1,3) + Double.parseDouble(rowWise[1]));
         }
-        else if(massage.contains("zPlus")){
+        else if(massage.contains("zPlus")){ //nach hinten
             String[] rowWise = massage.split(" ");
-            rotation.set(4, 3,  rotation.get(4,3) + Double.parseDouble(rowWise[1]));
+            rotation.set(2, 3,  rotation.get(2,3) + Double.parseDouble(rowWise[1]));
         }
         else if(massage.contains("bewegen")){
             sendAndReceive("EnableAlter");
@@ -177,7 +176,7 @@ public class Robot {
     
     public void stackLoop(){
     	koordinatenAblage = new ArrayList<String>();
-    	koordinatenAufnahme = new ArrayList<Matrix>();
+    	koordinatenAufnahme = new ArrayList<Matrix>(); //statt gemessene Werte vierlleicht verschiedene Offsets?
     	int n = 3;
     	for(int i = 0; i < n; i++) {
     		if(koordinatenAufnahme.size() <= i)

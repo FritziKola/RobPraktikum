@@ -66,14 +66,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				break;
 			case "stackLoop":
 				app.getRobot().stackLoop();
-//			case "kaliHM":
-//
-//
-//				 if (app.getCalibration() != null) {
-//					 app.getScene().lookup("#mmButtons").setVisible(false);
-//					 app.getScene().lookup("#kaliButtons").setVisible(true);
-//				 }else {app.createCalibration(12, "");}
-//				break;
+				break;
 			case "moveRobot":
 		    	 app.getCalibration().moveRobotPTP();
 		    	 break;
