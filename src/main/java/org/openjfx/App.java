@@ -94,6 +94,13 @@ public class App extends Application {
 		return calibration;
 	}
 	
+	public void setClient(Client client) {
+		this.client = client;
+	}
+	
+	public Client getClient() {
+		return client;
+	}
 	/*public Long getSliderValue() {
 		return sliderValue;
 	}

@@ -59,7 +59,6 @@ public class Client {
         writer.println(message);
         TextArea sent = port == 5005 ? (TextArea) app.getScene().lookup("#rAusgabe") : (TextArea) app.getScene().lookup("#tAusgabe");
         sent.setText(sent.getText() + "\n" + message);
-        
     }
 
 
@@ -73,7 +72,8 @@ public class Client {
         try {
             answer = reader.readLine();
             TextArea receive = port == 5005 ? (TextArea) app.getScene().lookup("#rAusgabe") : (TextArea) app.getScene().lookup("#tAusgabe");
-            receive.setText(receive.getText() + "\n" + answer);
+            receive.setText(receive.getText() + "\n" + answer + "\n");
+            receive.setScrollTop(Double.MAX_VALUE);
         } catch(Exception e){
             System.out.println("received methode didn't work.");
         }

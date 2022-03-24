@@ -1,15 +1,11 @@
 package org.openjfx;
 
 
-import externalThings.Jama.*;
-//import externalThings.Jama.Matrix;
-//import externalThings.Jama.SingularValueDecomposition;
-import javafx.scene.effect.Light;
-import java.util.Random;
-import java.util.Arrays;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import externalThings.Jama.Matrix;
+import externalThings.Jama.SingularValueDecomposition;
 
 public class Robot {
 
@@ -28,7 +24,7 @@ public class Robot {
      * Will connect to ad850 automatically
      * @param client
      */
-    public Robot(Client client,App app){
+    public Robot(Client client, App app){
         this.client = client;
         this.app = app;
         this.history = new ArrayList<String>();
@@ -63,7 +59,7 @@ public class Robot {
 
     }
 
-    private void sendHomMatrix(Matrix m){
+    public void sendHomMatrix(Matrix m){
         sendAndReceive("MoveRTHomRowWise " + m.get(0,0) + " " + m.get(0 ,1) + " " + m.get(0,2) + " " + m.get(0,3)
                 + m.get(1,0) + " " + m.get(1 ,1) + " " + m.get(1,2) + " " + m.get(1,3)
                 + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + m.get(2,3));
@@ -73,13 +69,13 @@ public class Robot {
         client.sendAndReceive("SetAdeptSpeed " + speed);
     }
 
-    /**
+    /**	
      * Send a message to the Robot and receives an answer
      * @param message The message send to the server
      */
     public void sendAndReceive(String message){
         makeHistory(message);
-        client.sendAndReceive(message);
+        client.sendAndReceive(message);	
     }
 
     public void disconnect(){
@@ -192,4 +188,20 @@ public class Robot {
     	}
     	
     }
-}
+    
+    public void setRotation(Matrix rotation) {
+    	this.rotation = rotation;
+    }
+    
+    public Matrix getRotation() {
+    	return rotation;
+    }
+    
+    public void sethmPosition(Matrix hMPosition) {
+    	this.hMPosition = hMPosition;
+    }
+    public Matrix gethMPosition() {
+    	return hMPosition;
+    }
+}	
+

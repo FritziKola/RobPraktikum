@@ -135,23 +135,43 @@ public class Gui {
         	}
         }
 		//Slider
+		FlowPane sliders = new FlowPane();
 		Slider robotSlider = new Slider(1, 100, 1);
 		robotSlider.setShowTickMarks(true);
 		robotSlider.valueProperty().addListener((observable, oldVal, newVal) -> {
 			sliderValue = Math.round((double) newVal);
 		});
 		robotSlider.addEventHandler(MouseEvent.MOUSE_RELEASED, new MouseHandler(app, this));
-		robotSlider.setMaxWidth(scene.getWidth() * .20);
-		robotSlider.setMinWidth(scene.getWidth() * .20);
-		grid.add(robotSlider, 0, 2);
+		robotSlider.setMaxWidth(scene.getWidth() * .10);
+		robotSlider.setMinWidth(scene.getWidth() * .10);
+		sliders.getChildren().add(robotSlider);
+		TextField xPlusWert = new TextField();
+		xPlusWert.setId("rotationXPlusWert");
+		xPlusWert.setPrefWidth(60);
+		xPlusWert.setPromptText("X Wert");
+		xPlusWert.addEventHandler(KeyEvent.KEY_PRESSED, new KeyHandler(app));
+		sliders.getChildren().add(xPlusWert);
+		TextField yPlusWert = new TextField();
+		yPlusWert.setId("rotationYPlusWert");
+		yPlusWert.setPrefWidth(60);
+		yPlusWert.setPromptText("Y Wert");
+		yPlusWert.addEventHandler(KeyEvent.KEY_PRESSED, new KeyHandler(app));
+		sliders.getChildren().add(yPlusWert);
+		TextField zPlusWert = new TextField();
+		zPlusWert.setId("rotationZPlusWert");
+		zPlusWert.setPrefWidth(60);
+		zPlusWert.setPromptText("Z Wert");
+		zPlusWert.addEventHandler(KeyEvent.KEY_PRESSED, new KeyHandler(app));
+		sliders.getChildren().add(zPlusWert);
+		grid.add(sliders, 0, 2);
 		//AusgabeFeld
 		TextArea robotAusgabetext = new TextArea();
 		robotAusgabetext.setId("rAusgabe");
 		robotAusgabetext.setEditable(false);
-		ScrollPane robotAusgabe = new ScrollPane(robotAusgabetext); 
-		robotAusgabetext.setPrefHeight(scene.getWidth() * .45);
-		robotAusgabe.setId("robotAusgabePane");
-		grid.add(robotAusgabe, 0, 3);
+//		ScrollPane robotAusgabe = new ScrollPane(robotAusgabetext); 
+		//robotAusgabetext.setPrefWidth(scene.getWidth() * .45);
+//		robotAusgabe.setId("robotAusgabePane");
+		grid.add(robotAusgabetext, 0, 3);
 		//Eingabe 
 		TextField robotBefehl = new TextField();
 		robotBefehl.setId("rBefehl");
@@ -203,10 +223,11 @@ public class Gui {
 		TextArea trackingAusgabetext = new TextArea();
 		trackingAusgabetext.setId("tAusgabe");
 		trackingAusgabetext.setEditable(false);
-		ScrollPane trackingAusgabe = new ScrollPane(trackingAusgabetext); 
-		trackingAusgabetext.setPrefHeight(scene.getWidth() * .45 );
-		trackingAusgabe.setId("trackingAusgabePane");
-		grid.add(trackingAusgabe, 1, 3);
+//		ScrollPane trackingAusgabe = new ScrollPane(trackingAusgabetext); 
+		//trackingAusgabetext.setPrefWidth(scene.getWidth() * .45 );
+		//trackingAusgabe.setId("trackingAusgabePane");
+//		trackingAusgabe.setVvalue(1);
+		grid.add(trackingAusgabetext, 1, 3);
 		//Eingabe 
 		TextField trackingBefehl = new TextField();
 		trackingBefehl.setId("tBefehl");
