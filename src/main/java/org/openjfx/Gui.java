@@ -118,12 +118,15 @@ public class Gui {
 		Button loslassen = new Button("loslassen");
 		loslassen.setId("loslassen");
 		robotButtons.getChildren().add(loslassen);
-		Button becherPos = new Button("an BecherPosition fahren");
-		becherPos.setId("becherPos");
+		Button becherPos = new Button("an Baustein Position fahren");
+		becherPos.setId("bausteinPos");
 		robotButtons.getChildren().add(becherPos);
 		Button stackLoopButton = new Button("StackLoop");
 		stackLoopButton.setId("stackLoop");
 		robotButtons.getChildren().add(stackLoopButton);
+		Button hMBerechnen = new Button("HM Berechnen");
+		hMBerechnen.setId("hMBerechnen");
+		robotButtons.getChildren().add(hMBerechnen);
 		
 		robotButtons.setAlignment(Pos.CENTER);
 		grid.add(robotButtons, 0, 1);

@@ -8,7 +8,6 @@ import org.openjfx.Tracking;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 
 public class ButtonHandler implements EventHandler<ActionEvent> {
@@ -46,12 +45,15 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				app.getRobot().loslassen();
 				app.getScene().lookup("#rBefehl").requestFocus();
 				break;
-			case "becherPos":
-				app.getRobot().becherPos();
+			case "bausteinPos":
+				app.getRobot().bausteinPos();
 				app.getScene().lookup("#rBefehl").requestFocus();
 				break;
 			case "stackLoop":
 				app.getRobot().stackLoop();
+				break;
+			case "hMBerechnen":
+				app.getRobot().mHPositionBerechnen(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY()); ;
 				break;
 			case "moveRobot":
 		    	 app.getCalibration().moveRobotPTP();

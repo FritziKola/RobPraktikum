@@ -56,7 +56,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 		            app.getRobot().getRotation().print(10 , 5);
 		            app.getRobot().gethMPosition().print(10, 5);
 		            app.getRobot().sendHomMatrix(app.getRobot().gethMPosition().times(app.getRobot().getRotation()));
-		            app.getClient().sendAndReceive("DisableAlter");
+		            app.getRobot().sendAndReceive("DisableAlter");
 				}
 			}
 			else if(event.getCode() == KeyCode.UP) {

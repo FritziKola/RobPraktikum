@@ -10,10 +10,14 @@ import externalThings.Jama.SingularValueDecomposition;
 public class Robot {
 
     private Client client;
-    private double[][] r = {{0, 0, -1, 0},
-            {0, 1, 0 ,0 }, {1, 0 , 0 , 0 }, {0, 0, 0, 1 }};
-    private Matrix rotation = new Matrix( r );
+    //private double[][] r = {{0, 0, -1, 0},
+    //        {0, 1, 0 ,0 }, {1, 0 , 0 , 0 }, {0, 0, 0, 1 }};
+    private Matrix rotation = new Matrix( new double[][] {{0, 0, -1, 0},
+            {0, 1, 0 ,0 }, {1, 0 , 0 , 0 }, {0, 0, 0, 1 }} );
     private Matrix hMPosition;
+    private Matrix bausteinPos = new Matrix(new double[][] {{0, 0, -1, -70},
+            {0, 1, 0 ,65 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }});
+    private Matrix aktuellePosition;
     private List<String> history;
     private App app;
     private List<String> koordinatenAblage; //kann man  Roboterkoordinaten nehmen
@@ -41,10 +45,7 @@ public class Robot {
         client.sendAndReceive("SetAdeptSpeed 5");
     }
 
-    /**
-     * Moves robot endefektor to point N
-     */
-    public void moveToPoint(Matrix N, Matrix X, Matrix Y){
+    public void mHPositionBerechnen(Matrix N, Matrix X, Matrix Y){
         Matrix YN = Y.times(N);
         SingularValueDecomposition svdYN = new SingularValueDecomposition(YN.getMatrix(0, 2, 0, 2));
         YN.setMatrix(0, 2, 0, 2, svdYN.getU().times(svdYN.getV().transpose()));
@@ -53,10 +54,20 @@ public class Robot {
 
         Matrix m= svdm.getU().times(svdm.getV().transpose());
         hMPosition.setMatrix(0,2,0,2, m);
-        sendAndReceive("EnableAlter");
-        sendHomMatrix(hMPosition);
-        sendAndReceive("DisableAlter");
+    }
+    /**
+     * Moves robot endefektor to point N
+     */
+    public void moveToPoint(Matrix N, Matrix X, Matrix Y){
+        mHPositionBerechnen(N, X, Y);
+        aktuellePosition =hMPosition;
+        moveToAktuellePosition();
+    }
 
+    private void moveToAktuellePosition(){
+        sendAndReceive("EnableAlter");
+        sendHomMatrix(aktuellePosition);
+        sendAndReceive("DisableAlter");
     }
 
     public void sendHomMatrix(Matrix m){
@@ -115,9 +126,12 @@ public class Robot {
     public void loslassen() {
     	sendAndReceive("DirectAdeptCmd signal -5, 6");
     }
-    
-    public void becherPos() {
-    	sendAndReceive("MovePTPJoints 2 -45 125 0 6 0");
+
+    /**
+     * Fährt an die Baustein Position des ersten Bausteins
+     */
+    public void bausteinPos() {
+        sendHomMatrix(hMPosition.times(bausteinPos));
     }
 
     private void makeHistory(String input) {
@@ -132,47 +146,34 @@ public class Robot {
      * als kruze funktion zum testen der rotations teile
      * TODO: schöner machen oder raus nehmen
      */
-    public void messageDecoder(String massage){
-        if(massage.contains("Rotation")) {
-            sendAndReceive("EnableAlter"); // vielleicht nicht nötig
-            /*String[] rowWise = massage.split(" ");
-            int i = 1;
-            for(int j= 0; j <3; j++ ){
-                for(int l =0; l<3; l++){
-                    rotation.set(j, l, Double.parseDouble(rowWise[i]));
-                    i ++;
-                }
-            }*/
-
+    public void messageDecoder(String message){
+        if(message.contains("Rotation")) {
+             // vielleicht nicht nötig
             rotation.print(10 , 5);
-            hMPosition.print(10, 5);
-            sendHomMatrix(hMPosition.times(rotation));
-            sendAndReceive("DisableAlter");
-        } else if(massage.contains("xPlus")){ // nach oben
-            String[] rowWise = massage.split(" ");
+            aktuellePosition = aktuellePosition.times(rotation);
+            moveToAktuellePosition();
+        } else if(message.contains("xPlus")){ // nach oben
+            String[] rowWise = message.split(" ");
             rotation.set(0, 3,  rotation.get(0,3) + Double.parseDouble(rowWise[1]));
         }
-        else if(massage.contains("yPlus")){ // zur Seite
-            String[] rowWise = massage.split(" ");
+        else if(message.contains("yPlus")){ // zur Seite
+            String[] rowWise = message.split(" ");
             rotation.set(1, 3,  rotation.get(1,3) + Double.parseDouble(rowWise[1]));
         }
-        else if(massage.contains("zPlus")){ //nach hinten
-            String[] rowWise = massage.split(" ");
+        else if(message.contains("zPlus")){ //nach hinten
+            String[] rowWise = message.split(" ");
             rotation.set(2, 3,  rotation.get(2,3) + Double.parseDouble(rowWise[1]));
         }
-        else if(massage.contains("bewegen")){
-            sendAndReceive("EnableAlter");
-            //sendHomMatrix(rotation.times(hMPosition)); // bewegt sich abhänig vom punkt gemessen bei "Messung vornehmen"
-            sendHomMatrix(hMPosition.times(rotation));
-            sendAndReceive("DisableAlter");
+        else if(message.contains("bewegen")){
+            moveToAktuellePosition();
         }
-        else{ sendAndReceive(massage);}
+        else{ sendAndReceive(message);}
 
     }
     
     public void stackLoop(){
     	koordinatenAblage = new ArrayList<String>();
-    	koordinatenAufnahme = new ArrayList<Matrix>(); //statt gemessene Werte vierlleicht verschiedene Offsets?
+    	koordinatenAufnahme = new ArrayList<Matrix>();
     	int n = 3;
     	for(int i = 0; i < n; i++) {
     		if(koordinatenAufnahme.size() <= i)

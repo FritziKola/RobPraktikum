@@ -93,21 +93,5 @@ public class App extends Application {
 	public Calibration getCalibration() {
 		return calibration;
 	}
-	
-	public void setClient(Client client) {
-		this.client = client;
-	}
-	
-	public Client getClient() {
-		return client;
-	}
-	/*public Long getSliderValue() {
-		return sliderValue;
-	}
-    
-    public void setSliderValue(Long sliderValue) {
-		this.sliderValue = sliderValue;
-	}
 
-	 */
 }
