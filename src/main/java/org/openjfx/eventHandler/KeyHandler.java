@@ -4,6 +4,7 @@ import org.openjfx.App;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -31,6 +32,31 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 				else if(isTracking) {
 					app.getTracking().sendAndReceive(text.getText());
 					text.setText("");
+				}
+				else if(text.getId().startsWith("rotation")) {
+					if(text.getId().equals("rotationXPlusWert")) {
+						app.getRobot().getRotation().set(0, 3,  app.getRobot().getRotation().get(0,3) + Double.parseDouble(text.getText()));
+					}
+					else if(text.getId().equals("rotationYPlusWert")) {
+						app.getRobot().getRotation().set(1, 3,  app.getRobot().getRotation().get(1,3) + Double.parseDouble(text.getText()));
+					}
+					else if(text.getId().equals("rotationZPlusWert")) {
+						app.getRobot().getRotation().set(2, 3,  app.getRobot().getRotation().get(2,3) + Double.parseDouble(text.getText()));
+					}
+					app.getRobot().sendAndReceive("EnableAlter"); // vielleicht nicht nötig
+		            /*String[] rowWise = massage.split(" ");
+		            int i = 1;
+		            for(int j= 0; j <3; j++ ){
+		                for(int l =0; l<3; l++){
+		                    rotation.set(j, l, Double.parseDouble(rowWise[i]));
+		                    i ++;
+		                }
+		            }*/
+
+		            app.getRobot().getRotation().print(10 , 5);
+		            app.getRobot().gethMPosition().print(10, 5);
+		            app.getRobot().sendHomMatrix(app.getRobot().gethMPosition().times(app.getRobot().getRotation()));
+		            app.getClient().sendAndReceive("DisableAlter");
 				}
 			}
 			else if(event.getCode() == KeyCode.UP) {

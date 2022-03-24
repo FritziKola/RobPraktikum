@@ -31,23 +31,9 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				System.exit(0);
 			case "serverConnect":
 				if(app.getRobot() ==null){app.setRobot(new Robot(new Client(5005, app),app));}
-				if(app.getTracking() == null){app.setTracking(new Tracking(new Client(5000, app)));}
+				if(app.getTracking() == null){app.setTracking(new Tracking(new Client(5000, app), app));}
 				if(app.getRobot() != null) gp.getChildren().remove(app.getScene().lookup("#serverConnect"));
 				break;
-//			case "rbefehlseingabe":
-//				app.getScene().lookup("#mmButtons").setVisible(false);
-//				app.getScene().lookup("#rEingabeBox").setVisible(true);
-//				break;
-//			case "tbefehlseingabe":
-//				app.getScene().lookup("#mmButtons").setVisible(false);
-//				app.getScene().lookup("#tEingabeBox").setVisible(true);
-//				break;
-//			case "backToMenu":
-//				app.getScene().lookup("#mmButtons").setVisible(true);
-//				app.getScene().lookup("#rEingabeBox").setVisible(false);
-//				app.getScene().lookup("#tEingabeBox").setVisible(false);
-//				app.getScene().lookup("#kaliButtons").setVisible(false);
-//				break;
 			case "endPos":
 				app.getRobot().endPos();
 				app.getScene().lookup("#rBefehl").requestFocus();
@@ -66,14 +52,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				break;
 			case "stackLoop":
 				app.getRobot().stackLoop();
-//			case "kaliHM":
-//
-//
-//				 if (app.getCalibration() != null) {
-//					 app.getScene().lookup("#mmButtons").setVisible(false);
-//					 app.getScene().lookup("#kaliButtons").setVisible(true);
-//				 }else {app.createCalibration(12, "");}
-//				break;
+				break;
 			case "moveRobot":
 		    	 app.getCalibration().moveRobotPTP();
 		    	 break;

@@ -1,22 +1,24 @@
 package org.openjfx;
 
-import externalThings.Jama.Matrix;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import externalThings.Jama.Matrix;
 
 public class Tracking {
 
     private Client client;
     private List<String> history;
     public Matrix measurement;
+	private App app;
 
     /**
      * Constructor for the Tracking connection
      * @param client an which to connect to
      */
-    public Tracking(Client client) {
+    public Tracking(Client client, App app) {
         this.client = client;
+        this.app = app;
         this.history = new ArrayList<String>();
         connectToTracking();
     }
