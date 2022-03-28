@@ -11,6 +11,7 @@ public class Tracking {
     private List<String> history;
     public Matrix measurement;
 	private App app;
+	private MeasurementThread measurementThread;
 
     /**
      * Constructor for the Tracking connection
@@ -28,17 +29,26 @@ public class Tracking {
      */
     public void connectToTracking(){
         client.sendAndReceive("CM_GETSYSTEM");
-        client.sendAndReceive("PolarisActive_1");
-        client.sendAndReceive("FORMAT_MATRIXROWWISE");
+//        client.sendAndReceive("PolarisActive_1");
+//        client.sendAndReceive("FORMAT_MATRIXROWWISE");
     }
 
 
     /**
-     * Takes a measurement and safes it
+     * Starts a thread for taking measurements. 
      */
-    public void takeMeasurements(Calibration calibration){
-        client.send("CM_NEXTVALUE");
-        measurement = calibration.parser(client.received());
+    public void startMeasurementThread(){
+    	measurementThread = new MeasurementThread(app);
+        measurementThread.start();
+    }
+    
+    /**
+     * Takes measurements
+     */
+    public void takeMeasurements() {
+    	System.out.println("");
+    	client.send("CM_NEXTVALUE");
+        setMeasurement(app.getCalibration().parser(client.received()));
     }
 
 
@@ -77,9 +87,17 @@ public class Tracking {
     public List<String> getHistory() {
         return history;
     }
+    
+    public void setMeasurement(Matrix measurement) {
+    	this.measurement = measurement;
+    }
 
-    public Matrix getMeasurement(){ return measurement; }
+    public Matrix getMeasurement() { return measurement; }
 
+    public Client getClient() { return client; }
 
+    public MeasurementThread getMeasurementThread() {
+		return measurementThread;
+	}
 
 }

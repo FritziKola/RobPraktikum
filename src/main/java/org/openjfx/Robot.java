@@ -16,7 +16,7 @@ public class Robot {
             {0, 1, 0 ,0 }, {1, 0 , 0 , 0 }, {0, 0, 0, 1 }} );
     private Matrix hMPosition;
     private final Matrix zwischenPos = new Matrix(new double[][]{{-0.637382, -0.770544, -0.002456, 434.744630}, {0.770528, -0.637340, -0.009174, -363.894951}, {0.005504, -0.007740, 0.999955, 130.619356},{0,0,0,1}});
-    private final Matrix bausteinPos = new Matrix( new double[][] {{0, 0, -1, -70},
+    private final Matrix bausteinPos = new Matrix( new double[][] {{0, 0, -1, -90},
             {0, 1, 0 ,65 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }}); // erste baustein position
     private final Matrix ueberBausteinen = new Matrix( new double[][] {{0, 0, -1, -120},
             {0, 1, 0 ,165 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }});
@@ -190,13 +190,14 @@ public class Robot {
     
     public void stackLoop(){
         System.out.println("Stackloop begint");
-    	app.getTracking().takeMeasurements(app.getCalibration());
+    	app.getTracking().startMeasurementThread();
+    	// TODO loop for moving step by step
         bausteinPos(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY());
         ansaugen();
         sendHomMatrix(zwischenPos);
         sendHomMatrix(ablagePos);
         loslassen();
-    	
+        app.getTracking().getMeasurementThread().stopMeasuring();
     }
     
     public void setRotation(Matrix rotation) {
