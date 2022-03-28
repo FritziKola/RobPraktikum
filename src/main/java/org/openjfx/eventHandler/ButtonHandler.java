@@ -58,8 +58,8 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				app.getRobot().mHPositionBerechnen(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY()); ;
 				break;
 			case "werteAusführen":
-				Thread testThread = new Thread(new TestRunnable());
-	            testThread.start();
+//				Thread testThread = new Thread(new TestRunnable());
+//	            testThread.start();
 				app.getRobot().sendAndReceive("EnableAlter");
 				TextField rotX = (TextField) app.getScene().lookup("#rotationXPlusWert");
 				TextField rotY = (TextField) app.getScene().lookup("#rotationYPlusWert");
