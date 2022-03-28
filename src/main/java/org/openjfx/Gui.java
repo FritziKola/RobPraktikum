@@ -11,7 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -32,7 +31,6 @@ public class Gui {
 	private ButtonHandler bh;
 	private App app;
 	private long sliderValue;
-
 	public Gui(App app) {
 		this.app = app;
 		scene = app.getScene();    
@@ -165,7 +163,11 @@ public class Gui {
 		zPlusWert.setPrefWidth(60);
 		zPlusWert.setPromptText("Z Wert");
 		zPlusWert.addEventHandler(KeyEvent.KEY_PRESSED, new KeyHandler(app));
+		Button werteAusfuehren = new Button("Rotation");
+		werteAusfuehren.setId("werteAusführen");
+		werteAusfuehren.addEventHandler(ActionEvent.ACTION,bh);
 		sliders.getChildren().add(zPlusWert);
+		sliders.getChildren().add(werteAusfuehren);
 		grid.add(sliders, 0, 2);
 		//AusgabeFeld
 		TextArea robotAusgabetext = new TextArea();

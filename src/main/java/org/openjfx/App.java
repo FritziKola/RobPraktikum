@@ -93,5 +93,11 @@ public class App extends Application {
 	public Calibration getCalibration() {
 		return calibration;
 	}
+	public void setGui(Gui gui) {
+		this.gui = gui;
+	}
+	public Gui getGui() {
+		return gui;
+	}
 
 }

@@ -3,11 +3,13 @@ package org.openjfx.eventHandler;
 import org.openjfx.App;
 import org.openjfx.Client;
 import org.openjfx.Robot;
+import org.openjfx.TestRunnable;
 import org.openjfx.Tracking;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class ButtonHandler implements EventHandler<ActionEvent> {
@@ -55,6 +57,24 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 			case "hMBerechnen":
 				app.getRobot().mHPositionBerechnen(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY()); ;
 				break;
+			case "werteAusführen":
+				Thread testThread = new Thread(new TestRunnable());
+	            testThread.start();
+				app.getRobot().sendAndReceive("EnableAlter");
+				TextField rotX = (TextField) app.getScene().lookup("#rotationXPlusWert");
+				TextField rotY = (TextField) app.getScene().lookup("#rotationYPlusWert");
+				TextField rotZ = (TextField) app.getScene().lookup("#rotationZPlusWert");
+				app.getRobot().getRotation().set(0, 3,  app.getRobot().getRotation().get(0,3) + Double.parseDouble(rotX.getText()));
+				app.getRobot().getRotation().set(1, 3,  app.getRobot().getRotation().get(1,3) + Double.parseDouble(rotY.getText()));
+				app.getRobot().getRotation().set(2, 3,  app.getRobot().getRotation().get(2,3) + Double.parseDouble(rotZ.getText()));
+				rotX.setText(null);
+				rotY.setText(null);
+				rotZ.setText(null);
+				app.getRobot().getRotation().print(10 , 5);
+	            app.getRobot().gethMPosition().print(10, 5);
+	            app.getRobot().sendHomMatrix(app.getRobot().gethMPosition().times(app.getRobot().getRotation()));
+	            app.getRobot().sendAndReceive("DisableAlter");
+	            break;
 			case "moveRobot":
 		    	 app.getCalibration().moveRobotPTP();
 		    	 break;
