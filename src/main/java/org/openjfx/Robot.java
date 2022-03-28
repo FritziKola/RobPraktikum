@@ -10,13 +10,18 @@ import externalThings.Jama.SingularValueDecomposition;
 public class Robot {
 
     private Client client;
-    //private double[][] r = {{0, 0, -1, 0},
-    //        {0, 1, 0 ,0 }, {1, 0 , 0 , 0 }, {0, 0, 0, 1 }};
+    private Matrix r = new Matrix( new double[][]{{0, 0, -1, 0},
+            {0, 1, 0 ,0 }, {1, 0 , 0 , 0 }, {0, 0, 0, 1 }});
     private Matrix rotation = new Matrix( new double[][] {{0, 0, -1, 0},
             {0, 1, 0 ,0 }, {1, 0 , 0 , 0 }, {0, 0, 0, 1 }} );
     private Matrix hMPosition;
-    private Matrix bausteinPos = new Matrix(new double[][] {{0, 0, -1, -70},
-            {0, 1, 0 ,65 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }});
+    private final Matrix zwischenPos = new Matrix(new double[][]{{-0.637382, -0.770544, -0.002456, 434.744630}, {0.770528, -0.637340, -0.009174, -363.894951}, {0.005504, -0.007740, 0.999955, 130.619356},{0,0,0,1}});
+    private final Matrix bausteinPos = new Matrix( new double[][] {{0, 0, -1, -70},
+            {0, 1, 0 ,65 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }}); // erste baustein position
+    private final Matrix ueberBausteinen = new Matrix( new double[][] {{0, 0, -1, -120},
+            {0, 1, 0 ,165 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }});
+    private Matrix ablagePos = new Matrix( new double[][]{{0.194659, -0.979396, 0.053764, -4.301147},
+            {0.975962, 0.187917, -0.110390, -460.177640}, {0.098012, 0.073960, 0.992433, 80.833656}, {0,0,0,1}});
     private Matrix aktuellePosition;
     private List<String> history;
     private App app;
@@ -65,15 +70,15 @@ public class Robot {
     }
 
     private void moveToAktuellePosition(){
-        sendAndReceive("EnableAlter");
         sendHomMatrix(aktuellePosition);
-        sendAndReceive("DisableAlter");
     }
 
     public void sendHomMatrix(Matrix m){
+        sendAndReceive("EnableAlter");
         sendAndReceive("MoveRTHomRowWise " + m.get(0,0) + " " + m.get(0 ,1) + " " + m.get(0,2) + " " + m.get(0,3)
                 + m.get(1,0) + " " + m.get(1 ,1) + " " + m.get(1,2) + " " + m.get(1,3)
                 + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + m.get(2,3));
+        sendAndReceive("DisableAlter");
     }
 
     public void setSpeed(Long speed){
@@ -130,7 +135,10 @@ public class Robot {
     /**
      * Fährt an die Baustein Position des ersten Bausteins
      */
-    public void bausteinPos() {
+    public void bausteinPos(Matrix N, Matrix X, Matrix Y) {
+        mHPositionBerechnen(N, X, Y);
+        bausteinPos.print(10, 5);
+        hMPosition.times(bausteinPos);
         sendHomMatrix(hMPosition.times(bausteinPos));
     }
 
@@ -148,11 +156,20 @@ public class Robot {
      */
     public void messageDecoder(String message){
         if(message.contains("Rotation")) {
-             // vielleicht nicht nötig
-            rotation.print(10 , 5);
-            aktuellePosition = aktuellePosition.times(rotation);
+            String[] rowWise = message.split(" ");
+            int i = 1;
+            for(int j= 0; j <3; j++ ){
+                for(int l =0; l<3; l++){
+                    r.set(j, l, Double.parseDouble(rowWise[i]));
+                    i ++;
+                }
+            }
+            // vielleicht nicht nötig
+            r.print(10, 5);
+            aktuellePosition = aktuellePosition.times(r);
             moveToAktuellePosition();
-        } else if(message.contains("xPlus")){ // nach oben
+        }
+        else if(message.contains("xPlus")){ // nach oben
             String[] rowWise = message.split(" ");
             rotation.set(0, 3,  rotation.get(0,3) + Double.parseDouble(rowWise[1]));
         }
@@ -172,21 +189,13 @@ public class Robot {
     }
     
     public void stackLoop(){
-    	koordinatenAblage = new ArrayList<String>();
-    	koordinatenAufnahme = new ArrayList<Matrix>();
-    	int n = 3;
-    	for(int i = 0; i < n; i++) {
-    		if(koordinatenAufnahme.size() <= i)
-    			break;
-    		Matrix target = koordinatenAufnahme.get(i);
-    		
-    		moveToPoint(target /* + Offset*/ ,app.getCalibration().getX(), app.getCalibration().getY());
-    		ansaugen();
-    		//potentiell hochfahren
-    		send("MovePTPJoints " + koordinatenAblage.get(i));
-    		loslassen();
-    		
-    	}
+        System.out.println("Stackloop begint");
+    	app.getTracking().takeMeasurements(app.getCalibration());
+        bausteinPos(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY());
+        ansaugen();
+        sendHomMatrix(zwischenPos);
+        sendHomMatrix(ablagePos);
+        loslassen();
     	
     }
     
