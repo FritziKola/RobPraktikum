@@ -13,7 +13,7 @@ public class MeasurementThread extends Thread {
 	public void run() {
 		Tracking tracking = app.getTracking();
 		while(running) {
-			tracking.takeMeasurements();
+			tracking.takeMeasurements2();
 	        try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {

@@ -12,6 +12,7 @@ public class Tracking {
     public Matrix measurement;
 	private App app;
 	private MeasurementThread measurementThread;
+	public boolean measurementChanged = false;
 
     /**
      * Constructor for the Tracking connection
@@ -50,6 +51,18 @@ public class Tracking {
     	client.send("CM_NEXTVALUE");
         setMeasurement(app.getCalibration().parser(client.received()));
     }
+
+    public void takeMeasurements2() {
+        System.out.println("");
+        client.send("CM_NEXTVALUE");
+        Matrix nextMeasurement = app.getCalibration().parser(client.received());
+        if(Math.abs(measurement.get(0,3)-nextMeasurement.get(0, 3)) > 2 || Math.abs(measurement.get(1,3)-nextMeasurement.get(1, 3)) > 2 || Math.abs(measurement.get(1,3)-nextMeasurement.get(1, 3)) > 2){
+            measurement = nextMeasurement;
+            measurementChanged = true; 
+        }
+    }
+
+
 
 
     /**

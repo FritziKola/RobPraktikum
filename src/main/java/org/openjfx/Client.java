@@ -60,6 +60,7 @@ public class Client {
         TextArea sent = port == 5005 ? (TextArea) app.getScene().lookup("#rAusgabe") : (TextArea) app.getScene().lookup("#tAusgabe");
         sent.setText(sent.getText() + "\n" + message);
     }
+    
 
 
 
