@@ -45,8 +45,7 @@ public class Robot {
     private Matrix aktuellePosition;
     private List<String> history;
     private App app;
-    private List<String> koordinatenAblage; //kann man  Roboterkoordinaten nehmen
-    private List<Matrix> koordinatenAufnahme; //über Marker, muss Offset zum Marker noch berechnen
+
 
     /**
      * Constructor for Robot
@@ -228,7 +227,8 @@ public class Robot {
     	// TODO loop for moving step by step
         int n = 5;
         for(int i= 0; i < n; i++) {
-        	if(i == n-1) {
+        	if(i == n-1) { 
+        		//app.getTracking().getMeasurementThread().stopMeasuring();
         		break;
         	}
 
@@ -247,7 +247,7 @@ public class Robot {
 	        loslassen();
 	        sendHomMatrix(ueberAblage);
 	        sendHomMatrix(hMPosition.times(ueberBausteinen));
-	        //app.getTracking().getMeasurementThread().stopMeasuring();
+	       
         }
     }
     
