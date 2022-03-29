@@ -15,11 +15,21 @@ public class Robot {
     private Matrix rotation = new Matrix( new double[][] {{0, 0, -1, 0},
             {0, 1, 0 ,0 }, {1, 0 , 0 , 0 }, {0, 0, 0, 1 }} );
     private Matrix hMPosition;
-    private final Matrix zwischenPos = new Matrix(new double[][]{{-0.637382, -0.770544, -0.002456, 434.744630}, {0.770528, -0.637340, -0.009174, -363.894951}, {0.005504, -0.007740, 0.999955, 130.619356},{0,0,0,1}});
-    private final Matrix bausteinPos = new Matrix( new double[][] {{0, 0, -1, -90},
-            {0, 1, 0 ,65 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }}); // erste baustein position
+    private final Matrix zwischenPos = new Matrix(new double[][]{{-0.637382, -0.770544, -0.002456, 434.744630}, {0.770528, -0.637340, -0.009174, -363.894951}, {0.005504, -0.007740, 0.999955, 190.619356},{0,0,0,1}});
+    private final Matrix bausteinPos[] = {new Matrix( new double[][] {{0, 0, -1, -66},
+            {0, 1, 0 ,75 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }}), // erste baustein position
+            new Matrix( new double[][] {{0, 0, -1, -66},
+            {0, 1, 0 ,75 }, {1, 0 , 0 , 290}, {0, 0, 0, 1 }}), // zweite baustein position
+            new Matrix( new double[][] {{0, 0, -1, -67},
+                    {0, 1, 0 ,125 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }}), // dritte baustein position
+            new Matrix( new double[][] {{0, 0, -1, -67},
+                    {0, 1, 0 ,125 }, {1, 0 , 0 , 290}, {0, 0, 0, 1 }}), // vierte baustein position
+            new Matrix( new double[][] {{0, 0, -1, -67},
+                    {0, 1, 0 ,125 }, {1, 0 , 0 , 290}, {0, 0, 0, 1 }}),}; // fünfte baustein position
     private final Matrix ueberBausteinen = new Matrix( new double[][] {{0, 0, -1, -120},
             {0, 1, 0 ,165 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }});
+    private Matrix ueberAblagePos = new Matrix(new double[][]{{0.194659, -0.979396, 0.053764, -4.301147},
+            {0.975962, 0.187917, -0.110390, -460.177640}, {0.098012, 0.073960, 0.992433, 190.833656}, {0,0,0,1}});
     private Matrix ablagePos = new Matrix( new double[][]{{0.194659, -0.979396, 0.053764, -4.301147},
             {0.975962, 0.187917, -0.110390, -460.177640}, {0.098012, 0.073960, 0.992433, 80.833656}, {0,0,0,1}});
     private Matrix aktuellePosition;
@@ -75,9 +85,17 @@ public class Robot {
 
     public void sendHomMatrix(Matrix m){
         sendAndReceive("EnableAlter");
-        sendAndReceive("MoveRTHomRowWise " + m.get(0,0) + " " + m.get(0 ,1) + " " + m.get(0,2) + " " + m.get(0,3)
+        sendAndReceive("MoveRTHomRowWiseStatus " + m.get(0,0) + " " + m.get(0 ,1) + " " + m.get(0,2) + " " + m.get(0,3)
                 + m.get(1,0) + " " + m.get(1 ,1) + " " + m.get(1,2) + " " + m.get(1,3)
-                + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + m.get(2,3));
+                + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + m.get(2,3) + " noToggleArm noToggleHand");
+        sendAndReceive("DisableAlter");
+    }
+
+    public void sendHomMatrixNoToggel(Matrix m){
+        sendAndReceive("EnableAlter");
+        sendAndReceive("MoveRTHomRowWiseStatus " + m.get(0,0) + " " + m.get(0 ,1) + " " + m.get(0,2) + " " + m.get(0,3)
+                + m.get(1,0) + " " + m.get(1 ,1) + " " + m.get(1,2) + " " + m.get(1,3)
+                + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + m.get(2,3) + " noToggleArm" );
         sendAndReceive("DisableAlter");
     }
 
@@ -137,9 +155,15 @@ public class Robot {
      */
     public void bausteinPos(Matrix N, Matrix X, Matrix Y) {
         mHPositionBerechnen(N, X, Y);
-        bausteinPos.print(10, 5);
-        hMPosition.times(bausteinPos);
-        sendHomMatrix(hMPosition.times(bausteinPos));
+        bausteinPos[1].print(10, 5);
+        aktuellePosition=hMPosition.times(bausteinPos[1]);
+        sendHomMatrix(aktuellePosition);
+    }
+    public void bausteinPos(Matrix N, Matrix X, Matrix Y, int i) {
+        mHPositionBerechnen(N, X, Y);
+        bausteinPos[i].print(10, 5);
+        aktuellePosition=hMPosition.times(bausteinPos[i]);
+        sendHomMatrix(aktuellePosition);
     }
 
     private void makeHistory(String input) {
@@ -190,14 +214,21 @@ public class Robot {
     
     public void stackLoop(){
         System.out.println("Stackloop begint");
-    	app.getTracking().startMeasurementThread();
+    	//app.getTracking().startMeasurementThread();
     	// TODO loop for moving step by step
+        mHPositionBerechnen(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY());
+        sendHomMatrix(hMPosition.times(ueberBausteinen));
         bausteinPos(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY());
         ansaugen();
-        sendHomMatrix(zwischenPos);
+        sendHomMatrix(aktuellePosition.times(new Matrix( new double[][] {{1, 0, 0, 0},
+                {0, 1, 0 ,0 }, {0, 0 , 1 , 50}, {0, 0, 0, 1 }})));
+        sendHomMatrix(hMPosition.times(ueberBausteinen));
+        sendHomMatrix(ueberAblagePos);
         sendHomMatrix(ablagePos);
         loslassen();
-        app.getTracking().getMeasurementThread().stopMeasuring();
+        sendHomMatrix(ueberAblagePos);
+        sendHomMatrix(hMPosition.times(ueberBausteinen));
+        //app.getTracking().getMeasurementThread().stopMeasuring();
     }
     
     public void setRotation(Matrix rotation) {

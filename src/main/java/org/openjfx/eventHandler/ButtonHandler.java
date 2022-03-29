@@ -78,7 +78,7 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 		    	 app.getCalibration().moveRobotPTP();
 		    	 break;
 			case "kalibrierung":
-				 app.createCalibration(12, "");
+				 app.createCalibration(13, "");
 				 app.getCalibration().solveCalibration();
 		    	 break;
 			case "mVornehmen":

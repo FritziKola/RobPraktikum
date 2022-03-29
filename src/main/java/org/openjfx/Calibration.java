@@ -208,16 +208,16 @@ public class Calibration {
     private void doAllMeasurments() {
         robotMatricesM = new Matrix[measurements];
         trackingMatricesN =  new Matrix[measurements];
-        robot.setSpeed(10L);
+        robot.setSpeed(15L);
         String[] movements = { "MovePTPJoints -14 -167 165 -25 0 0", "MovePTPJoints 13 -152 151 -28 0 0", "MovePTPJoints -32 -146 143 2 0 0",
                 "MovePTPJoints 11 -184 146 18 0 0", "MovePTPJoints -31 -128 136 5 0 0", "MovePTPJoints -29 -121 136 -28 0 0",
                 "MovePTPJoints -27 -122 155 26 0 0", "MovePTPJoints -26 -152 142 7 0 0", "MovePTPJoints 25 -153 157 -31 0 0",
-                "MovePTPJoints 17 -147 162 4 0 0", "MovePTPJoints 15 -148 141 17 0 0", "MovePTPJoints -15 -163 150 -13 0 0",};
+                "MovePTPJoints 17 -147 162 4 0 0", "MovePTPJoints 15 -148 141 17 0 0", "MovePTPJoints -15 -163 150 -13 0 0", "MovePTPJoints 0 -150 150 0 0 0"};
         int i =0;
         for(String m : movements){
             robot.sendAndReceive(m);
             try {
-                Thread.sleep(3000);
+                Thread.sleep(2000);
             } catch (Exception e){
                 System.out.println("Fehler sleep");
             }

@@ -29,8 +29,8 @@ public class Tracking {
      */
     public void connectToTracking(){
         client.sendAndReceive("CM_GETSYSTEM");
-//        client.sendAndReceive("PolarisActive_1");
-//        client.sendAndReceive("FORMAT_MATRIXROWWISE");
+        client.sendAndReceive("PolarisActive_1");
+        client.sendAndReceive("FORMAT_MATRIXROWWISE");
     }
 
 
