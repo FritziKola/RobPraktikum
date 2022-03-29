@@ -28,10 +28,20 @@ public class Robot {
                     {0, 1, 0 ,125 }, {1, 0 , 0 , 290}, {0, 0, 0, 1 }}),}; // fünfte baustein position
     private final Matrix ueberBausteinen = new Matrix( new double[][] {{0, 0, -1, -120},
             {0, 1, 0 ,165 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }});
-    private Matrix ueberAblagePos = new Matrix(new double[][]{{0.194659, -0.979396, 0.053764, -4.301147},
-            {0.975962, 0.187917, -0.110390, -460.177640}, {0.098012, 0.073960, 0.992433, 190.833656}, {0,0,0,1}});
-    private Matrix ablagePos = new Matrix( new double[][]{{0.194659, -0.979396, 0.053764, -4.301147},
-            {0.975962, 0.187917, -0.110390, -460.177640}, {0.098012, 0.073960, 0.992433, 80.833656}, {0,0,0,1}});
+    private Matrix ueberAblagePos[] = {new Matrix(new double[][]{{0.194659, -0.979396, 0.053764, -4.301147},
+            {0.975962, 0.187917, -0.110390, -460.177640}, {0.098012, 0.073960, 0.992433, 190.833656}, {0,0,0,1}}),// erste ÜberAblage Pos;
+    		new Matrix(new double [][] {{ 0.192111, -0.980889, 0.030821, -2.465723},{0.980637, 0.190655, -0.044751, -465.428743},{0.038020, 0.038822, 0.998523, 80.346491},{0,0,0,1}}),// zweite überAblage Pos
+    		new Matrix(new double [][] {{ 0.192111, -0.980889, 0.030821, 50.465723},{0.980637, 0.190655, -0.044751, -465.428743},{0.038020, 0.038822, 0.998523, 80.346491}, {0,0,0,1}}),// dritte überAblage Pos
+    		new Matrix(new double [][] {{ 0.980889, 0.192111, 0.030821, 30.465720},{-0.190655, 0.980636, -0.044751, -485.428746},{-0.038821, 0.038020, 0.998523, 105.346520}, {0,0,0,1}}),// vierte überAblage Pos
+    		new Matrix(new double [][] {{ 0.192111, -0.980889, 0.030821, 25.465719},{0.980636, 0.190655, -0.044751, -438.428750},{0.038020, 0.038821, 0.998523,190.346551}, {0,0,0,1}})// fünfte überAblage Pos
+    };
+    private Matrix ablagePos[] = {new Matrix( new double[][]{{0.194659, -0.979396, 0.053764, -4.301147},
+            {0.975962, 0.187917, -0.110390, -460.177640}, {0.098012, 0.073960, 0.992433, 80.833656}, {0,0,0,1}}), // erste AblagePos
+    		new Matrix(new double [][] {{ 0.192111, -0.980889, 0.030821, -2.465723},{0.980637, 0.190655, -0.044751, -465.428743},{0.038020, 0.038822, 0.998523, 80.346491}, {0,0,0,1}}),// zweite Ablage Pos
+    		new Matrix(new double [][] {{ 0.980889, 0.192111, 0.030821, -2.465720},{-0.190655, 0.980636, -0.044751, -465.428746},{-0.038821, 0.038020, 0.998523, 190.346520}, {0,0,0,1}}),// dritte Ablage Pos
+    		new Matrix(new double [][] {{ 0.980889, 0.192111, 0.030821, 25.465720},{-0.190655, 0.980636, -0.044751, -438.428746},{-0.038821, 0.038020, 0.998523, 105.346520}, {0,0,0,1}}),// vierte Ablage Pos
+    		new Matrix(new double [][] {{ 0.192111, -0.980889, 0.030821, 25.465719},{0.980636, 0.190655, -0.044751, -438.428750},{0.038020, 0.038821, 0.998523, 190.346551}, {0,0,0,1}}),// fünfte Ablage Pos
+    };
     private Matrix aktuellePosition;
     private List<String> history;
     private App app;
@@ -216,19 +226,29 @@ public class Robot {
         System.out.println("Stackloop begint");
     	//app.getTracking().startMeasurementThread();
     	// TODO loop for moving step by step
-        mHPositionBerechnen(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY());
-        sendHomMatrix(hMPosition.times(ueberBausteinen));
-        bausteinPos(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY());
-        ansaugen();
-        sendHomMatrix(aktuellePosition.times(new Matrix( new double[][] {{1, 0, 0, 0},
-                {0, 1, 0 ,0 }, {0, 0 , 1 , 50}, {0, 0, 0, 1 }})));
-        sendHomMatrix(hMPosition.times(ueberBausteinen));
-        sendHomMatrix(ueberAblagePos);
-        sendHomMatrix(ablagePos);
-        loslassen();
-        sendHomMatrix(ueberAblagePos);
-        sendHomMatrix(hMPosition.times(ueberBausteinen));
-        //app.getTracking().getMeasurementThread().stopMeasuring();
+        int n = 5;
+        for(int i= 0; i < n; i++) {
+        	if(i == n-1) {
+        		break;
+        	}
+
+        	Matrix ueberAblage = ueberAblagePos[i];
+        	Matrix ablage = ablagePos[i];
+        	app.getTracking().takeMeasurements(); //macht immer Messung am Anfang des Loops
+	        mHPositionBerechnen(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY());
+	        sendHomMatrix(hMPosition.times(ueberBausteinen));
+	        bausteinPos(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY(), i);
+	        ansaugen();
+	        sendHomMatrix(aktuellePosition.times(new Matrix( new double[][] {{1, 0, 0, 0},
+	                {0, 1, 0 ,0 }, {0, 0 , 1 , 50}, {0, 0, 0, 1 }})));
+	        sendHomMatrix(hMPosition.times(ueberBausteinen));
+	        sendHomMatrix( ueberAblage);
+	        sendHomMatrix(ablage);
+	        loslassen();
+	        sendHomMatrix(ueberAblage);
+	        sendHomMatrix(hMPosition.times(ueberBausteinen));
+	        //app.getTracking().getMeasurementThread().stopMeasuring();
+        }
     }
     
     public void setRotation(Matrix rotation) {
