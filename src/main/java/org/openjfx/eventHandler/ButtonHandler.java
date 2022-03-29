@@ -56,6 +56,8 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 			case "hMBerechnen":
 				app.getRobot().mHPositionBerechnen(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY()); ;
 				break;
+			case "echtzeit":
+				break; 
 			case "werteAusführen":
 //				Thread testThread = new Thread(new TestRunnable());
 //	            testThread.start();

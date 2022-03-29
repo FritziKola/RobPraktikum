@@ -125,6 +125,9 @@ public class Gui {
 		Button hMBerechnen = new Button("HM Berechnen");
 		hMBerechnen.setId("hMBerechnen");
 		robotButtons.getChildren().add(hMBerechnen);
+		Button echtzeitButton = new Button("Echtzeit");
+		echtzeitButton.setId("echtzeit");
+		robotButtons.getChildren().add(echtzeitButton);
 		
 		robotButtons.setAlignment(Pos.CENTER);
 		grid.add(robotButtons, 0, 1);
