@@ -29,11 +29,11 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				if(app.getRobot() != null){app.getRobot().disconnect();}
 				if(app.getTracking() != null){app.getTracking().disconnect();}
 				System.exit(0);
-			case "serverConnect":
-				if(app.getRobot() ==null){app.setRobot(new Robot(new Client(5005, app),app));}
-				if(app.getTracking() == null){app.setTracking(new Tracking(new Client(5000, app), app));}
-				if(app.getRobot() != null) gp.getChildren().remove(app.getScene().lookup("#serverConnect"));
-				break;
+			//case "serverConnect":
+				//if(app.getRobot() ==null){app.setRobot(new Robot(new Client(5005, app),app));}
+				//if(app.getTracking() == null){app.setTracking(new Tracking(new Client(5000, app), app));}
+				//if(app.getRobot() != null) gp.getChildren().remove(app.getScene().lookup("#serverConnect"));
+				//break;
 			case "endPos":
 				app.getRobot().endPos();
 				app.getScene().lookup("#rBefehl").requestFocus();
@@ -57,7 +57,8 @@ public class ButtonHandler implements EventHandler<ActionEvent> {
 				app.getRobot().mHPositionBerechnen(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY()); ;
 				break;
 			case "echtzeit":
-				break; 
+				app.getRobot().echtzeit();
+				break;
 			case "werteAusführen":
 //				Thread testThread = new Thread(new TestRunnable());
 //	            testThread.start();

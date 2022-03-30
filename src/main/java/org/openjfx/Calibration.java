@@ -196,7 +196,6 @@ public class Calibration {
                 transPart[i][0] = -k;
             }
             hminverted.setMatrix(0, 3, 3, 3, new Matrix(transPart));
-            hminverted.print(10,5);
             robotMatricesM[n] = hminverted;
         }
 

@@ -16,16 +16,16 @@ public class Robot {
             {0, 1, 0 ,0 }, {1, 0 , 0 , 0 }, {0, 0, 0, 1 }} );
     private Matrix hMPosition;
     private final Matrix zwischenPos = new Matrix(new double[][]{{-0.637382, -0.770544, -0.002456, 434.744630}, {0.770528, -0.637340, -0.009174, -363.894951}, {0.005504, -0.007740, 0.999955, 190.619356},{0,0,0,1}});
-    private final Matrix bausteinPos[] = {new Matrix( new double[][] {{0, 0, -1, -66},
-            {0, 1, 0 ,75 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }}), // erste baustein position
-            new Matrix( new double[][] {{0, 0, -1, -66},
-            {0, 1, 0 ,75 }, {1, 0 , 0 , 290}, {0, 0, 0, 1 }}), // zweite baustein position
-            new Matrix( new double[][] {{0, 0, -1, -67},
-                    {0, 1, 0 ,125 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }}), // dritte baustein position
-            new Matrix( new double[][] {{0, 0, -1, -67},
-                    {0, 1, 0 ,125 }, {1, 0 , 0 , 290}, {0, 0, 0, 1 }}), // vierte baustein position
-            new Matrix( new double[][] {{0, 0, -1, -67},
-                    {0, 1, 0 ,125 }, {1, 0 , 0 , 290}, {0, 0, 0, 1 }}),}; // fünfte baustein position
+    private final Matrix bausteinPos[] = {new Matrix( new double[][] {{0, 0, -1, -64},
+            {0, 1, 0 ,66 }, {1, 0 , 0 , 186}, {0, 0, 0, 1 }}), // erste baustein position
+            new Matrix( new double[][] {{0, 0, -1, -64},
+            {0, 1, 0 ,66 }, {1, 0 , 0 , 296}, {0, 0, 0, 1 }}), // zweite baustein position
+            new Matrix( new double[][] {{0, 0, -1, -62},
+                    {0, 1, 0 ,113 }, {1, 0 , 0 , 181}, {0, 0, 0, 1 }}), // dritte baustein position
+            new Matrix( new double[][] {{0, 0, -1, -62},
+                    {0, 1, 0 ,115 }, {1, 0 , 0 , 289}, {0, 0, 0, 1 }}), // vierte baustein position
+            new Matrix( new double[][] {{0, 0, -1, -62},
+                    {0, 1, 0 ,161 }, {1, 0 , 0 , 291}, {0, 0, 0, 1 }}),}; // fünfte baustein position
     private final Matrix ueberBausteinen = new Matrix( new double[][] {{0, 0, -1, -120},
             {0, 1, 0 ,165 }, {1, 0 , 0 , 180}, {0, 0, 0, 1 }});
     private Matrix ueberAblagePos[] = {new Matrix(new double[][]{{0.194659, -0.979396, 0.053764, -4.301147},
@@ -101,7 +101,20 @@ public class Robot {
                 + m.get(1,0) + " " + m.get(1 ,1) + " " + m.get(1,2) + " " + m.get(1,3)
                 + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + m.get(2,3) + " noToggleArm noToggleHand");
         sendAndReceive("DisableAlter");
+    }
 
+    public void sendHomMatrixHandToggle(Matrix m){
+        sendAndReceive("EnableAlter");
+        sendAndReceive("MoveRTHomRowWiseStatus " + m.get(0,0) + " " + m.get(0 ,1) + " " + m.get(0,2) + " " + m.get(0,3)
+                + m.get(1,0) + " " + m.get(1 ,1) + " " + m.get(1,2) + " " + m.get(1,3)
+                + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + m.get(2,3) + " noToggleArm");
+        sendAndReceive("DisableAlter");
+    }
+
+    public void sendHomMatrixWithoutAlterOnOff(Matrix m){
+        sendAndReceive("MoveRTHomRowWiseStatus " + m.get(0,0) + " " + m.get(0 ,1) + " " + m.get(0,2) + " " + m.get(0,3)
+                + m.get(1,0) + " " + m.get(1 ,1) + " " + m.get(1,2) + " " + m.get(1,3)
+                + m.get(2,0) + " " + m.get(2 ,1) + " " + m.get(2,2) + " " + m.get(2,3) + " noToggleArm noToggleHand");
     }
 
     public void setSpeed(Long speed){
@@ -166,11 +179,10 @@ public class Robot {
     }
 
 
-    public void bausteinPos(Matrix N, Matrix X, Matrix Y, int i) {
+    public Matrix bausteinPos(Matrix N, Matrix X, Matrix Y, int i) {
         mHPositionBerechnen(N, X, Y);
         bausteinPos[i].print(10, 5);
-        aktuellePosition=hMPosition.times(bausteinPos[i]);
-        sendHomMatrix(aktuellePosition);
+        return hMPosition.times(bausteinPos[i]);
     }
 
     private void makeHistory(String input) {
@@ -223,29 +235,31 @@ public class Robot {
         System.out.println("Stackloop begint");
     	//app.getTracking().startMeasurementThread();
     	// TODO loop for moving step by step
+        Matrix steinPos;
         int n = 4;
         for(int i= 0; i < n; i++) {
-        	if(i == n-1) { 
-        		//app.getTracking().getMeasurementThread().stopMeasuring();
-        		break;
-        	}
+            System.out.println(i);
         	Matrix ueberAblage = ueberAblagePos[i];
         	Matrix ablage = ablagePos[i];
         	app.getTracking().takeMeasurements(); //macht immer Messung am Anfang des Loops
 	        mHPositionBerechnen(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY());
 	        sendHomMatrix(hMPosition.times(ueberBausteinen));
-	        bausteinPos(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY(), i);
+	        steinPos= bausteinPos(app.getTracking().getMeasurement(), app.getCalibration().getX(), app.getCalibration().getY(), i);
+            sendHomMatrix(steinPos.times(new Matrix( new double[][] {{1, 0, 0, 0},
+                    {0, 1, 0 ,0 }, {0, 0 , 1 , 50}, {0, 0, 0, 1 }})));
+            sendHomMatrix(steinPos);
 	        ansaugen();
-	        sendHomMatrix(aktuellePosition.times(new Matrix( new double[][] {{1, 0, 0, 0},
+	        sendHomMatrix(steinPos.times(new Matrix( new double[][] {{1, 0, 0, 0},
 	                {0, 1, 0 ,0 }, {0, 0 , 1 , 50}, {0, 0, 0, 1 }})));
 	        sendHomMatrix(hMPosition.times(ueberBausteinen));
 	        sendHomMatrix(ueberAblage);
-	        sendHomMatrix(ablage);
+	        sendHomMatrixHandToggle(ablage);
 	        loslassen();
-	        sendHomMatrix(ueberAblage);
+	        sendHomMatrixHandToggle(ueberAblage);
 	        sendHomMatrix(hMPosition.times(ueberBausteinen));
-	       
+            System.out.println(i);
         }
+        System.out.println("stack loop ende");
     }
 
     /**
@@ -253,6 +267,7 @@ public class Robot {
      */
     public void echtzeit(){
         int sec = 0;
+        sendAndReceive("EnableAlter");
         send("GetPositionHomRowWise");
         Matrix momentPos = app.getCalibration().parser(received());
         toggleEchtzeit = true;
@@ -267,7 +282,7 @@ public class Robot {
         normVector.set(2, 0, (1/wurzel)*zielPosition.get(2,3));
         while(toggleEchtzeit){
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -280,17 +295,24 @@ public class Robot {
                 normVector.set(0, 0, (1/wurzel)*zielPosition.get(0,3));
                 normVector.set(1, 0, (1/wurzel)*zielPosition.get(1,3));
                 normVector.set(2, 0, (1/wurzel)*zielPosition.get(2,3));
+                System.out.println("Ziel Pos:");
+                zielPosition.print(10,5);
             }
+            normVector.print(10,5);
             if(Math.abs(momentPos.get(0, 3) - zielPosition.get(0,3)) > 2 || Math.abs(momentPos.get(1, 3) - zielPosition.get(1,3)) > 2 || Math.abs(momentPos.get(2, 3) - zielPosition.get(2,3)) > 2 ){
-                momentPos.set(0, 3, momentPos.get(0,3) + normVector.get(0,3) * 2);
-                momentPos.set(0, 3, momentPos.get(0,3) + normVector.get(0,3) * 2);
-                momentPos.set(0, 3, momentPos.get(0,3) + normVector.get(0,3) * 2);
-                sendHomMatrix(momentPos);
+                momentPos.set(0, 3, momentPos.get(0,3) + normVector.get(0,0) * 2);
+                momentPos.set(1, 3, momentPos.get(1,3) + normVector.get(1,0) * 2);
+                momentPos.set(2, 3, momentPos.get(2,3) + normVector.get(2,0) * 2);
+                System.out.println("Movment Pos:");
+                momentPos.print(10,5);
+                sendHomMatrixWithoutAlterOnOff(momentPos);
             }
             // else {toggleEchtzeit = false;}
-            if(sec == 50){
+            if(sec == 100){
                 toggleEchtzeit = false;}
         }
+        System.out.println("echtzeitEnde");
+        sendAndReceive("DisableAlter");
         app.getTracking().getMeasurementThread().stopMeasuring();
     }
 

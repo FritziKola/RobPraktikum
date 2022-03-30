@@ -27,6 +27,8 @@ public class App extends Application {
 		stage.setScene(scene); 
 		gui = new Gui(this); 
 		stage.show();
+		setRobot(new Robot(new Client(5005, this),this));
+		setTracking(new Tracking(new Client(5000, this),this ));
 		// Testmatrix
 		/*double[][] t = {{1, 2, 3, 1},
 				{4, 5, 6, 2},
